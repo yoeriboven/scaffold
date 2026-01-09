@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__herd__get_site_information",
+      "mcp__laravel-boost__list-routes",
+      "Bash(source ~/.zshrc)",
+      "Bash(npx tsc:*)",
+      "Bash(npm shadcn-vue add:*)",
+      "Bash(npx shadcn-vue@latest add:*)",
+      "Bash(npm run build:*)",
+      "mcp__laravel-boost__application-info",
+      "Bash(vendor/bin/pint:*)",
+      "mcp__shadcnVue__search_items_in_registries",
+      "mcp__laravel-boost__browser-logs",
+      "mcp__laravel-boost__search-docs",
+      "mcp__laravel-boost__read-log-entries"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost",
+    "herd"
+  ]
+}
