@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Teams;
+namespace App\Http\Controllers\App\Teams;
 
 use App\Domains\Teams\Models\Invitation;
 use App\Http\Controllers\Controller;
