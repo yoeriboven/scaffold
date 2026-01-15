@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Domains\Teams\Models\Team;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\MissingAttributeException;
@@ -56,7 +57,9 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureMorphMap(): void
     {
-        Relation::enforceMorphMap([]);
+        Relation::enforceMorphMap([
+            'team' => Team::class,
+        ]);
     }
 
     private function configureAssetPrefetching(): void

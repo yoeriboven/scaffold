@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->group(base_path('routes/front.php'));
 
             Route::middleware(['web', 'auth', 'app'])
+                ->prefix('app')
                 ->group(base_path('routes/app.php'));
 
             Route::middleware('web')
