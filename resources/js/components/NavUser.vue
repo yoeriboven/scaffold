@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import UserMenuContent from '@/UserMenuContent.vue';
 import UserInfo from '@/components/UserInfo.vue';
+import UserMenuContent from '@/components/UserMenuContent.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
