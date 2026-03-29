@@ -2,9 +2,24 @@
     "agents": [
         "claude_code"
     ],
-    "editors": [
-        "claude_code"
+    "guidelines": true,
+    "herd_mcp": true,
+    "mcp": true,
+    "packages": [
+        "inertiajs/inertia-laravel",
+        "spatie/boost-spatie-guidelines",
+        "laravel/fortify",
+        "laravel/horizon",
+        "spatie/laravel-ray"
     ],
-    "guidelines": [],
-    "herd_mcp": true
+    "sail": false,
+    "skills": [
+        "pest-testing",
+        "inertia-vue-development",
+        "tailwindcss-development",
+        "fortify-development",
+        "configuring-horizon",
+        "spatie-laravel-php-standards",
+        "debugging-output-and-previewing-html-using-ray"
+    ]
 }
