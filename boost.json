@@ -3,8 +3,8 @@
         "claude_code"
     ],
     "guidelines": true,
-    "herd_mcp": true,
     "mcp": true,
+    "nightwatch_mcp": false,
     "packages": [
         "spatie/boost-spatie-guidelines",
         "laravel/fortify",

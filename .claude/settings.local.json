@@ -16,7 +16,8 @@
       "mcp__laravel-boost__read-log-entries",
       "Bash(python3 -m json.tool)",
       "Bash(php artisan:*)",
-      "Bash(composer show:*)"
+      "Bash(composer show:*)",
+      "Bash(composer update:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
