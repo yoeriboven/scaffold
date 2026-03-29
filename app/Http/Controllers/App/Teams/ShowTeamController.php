@@ -20,7 +20,7 @@ class ShowTeamController
             404
         );
 
-        return Inertia::render('Team', [
+        return Inertia::render('Team/Team', [
             'team' => [
                 'members' => currentTeam()
                     ->users()

@@ -18,7 +18,9 @@
             <!-- Team Members Section -->
             <div class="space-y-6">
                 <div>
-                    <h2 class="text-lg font-medium">{{ $t('Team Members') }}</h2>
+                    <h2 class="text-lg font-medium">
+                        {{ $t('Team Members') }}
+                    </h2>
                     <p class="mt-1 text-sm text-muted-foreground">
                         {{ team.members.length }}
                         {{
@@ -130,8 +132,6 @@
 import { Head } from '@inertiajs/vue3';
 import { trans } from 'laravel-vue-i18n';
 
-import InviteTeamMemberDialog from '@/components/InviteTeamMemberDialog.vue';
-import RevokeInvitationDialog from '@/components/RevokeInvitationDialog.vue';
 import {
     Table,
     TableBody,
@@ -141,6 +141,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
+import InviteTeamMemberDialog from '@/pages/Team/components/InviteTeamMemberDialog.vue';
+import RevokeInvitationDialog from '@/pages/Team/components/RevokeInvitationDialog.vue';
 import { type BreadcrumbItem } from '@/types';
 
 interface Member {
