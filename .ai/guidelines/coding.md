@@ -83,8 +83,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 ## CLI
 
-When running `php`, `npm` or `npx` first source the ~/.zshrc (`source ~/.zshrc`).
-
 Run `npx tsc --noEmit` to make sure there are no ts errors.
 
 ## Libraries
