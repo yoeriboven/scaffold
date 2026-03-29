@@ -6,19 +6,18 @@
     "herd_mcp": true,
     "mcp": true,
     "packages": [
-        "inertiajs/inertia-laravel",
         "spatie/boost-spatie-guidelines",
         "laravel/fortify",
-        "laravel/horizon",
         "spatie/laravel-ray"
     ],
     "sail": false,
     "skills": [
+        "laravel-best-practices",
+        "configuring-horizon",
         "pest-testing",
         "inertia-vue-development",
         "tailwindcss-development",
         "fortify-development",
-        "configuring-horizon",
         "spatie-laravel-php-standards",
         "debugging-output-and-previewing-html-using-ray"
     ]
