@@ -2,7 +2,7 @@ import toast from '@/plugins/toast';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { i18nVue } from 'laravel-vue-i18n';
 import { ZiggyVue } from 'ziggy-js';
-import { initializeTheme } from './composables/useAppearance';
+import { initializeTheme } from '@/composables/useAppearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

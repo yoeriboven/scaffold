@@ -72,7 +72,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->dontTruncateRequestExceptions();
 
         $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
-            if (!$request->inertia()) {
+            if (! $request->inertia()) {
                 return $response;
             }
 

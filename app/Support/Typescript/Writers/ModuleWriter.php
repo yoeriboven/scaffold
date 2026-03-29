@@ -28,7 +28,7 @@ class ModuleWriter implements Writer
 
         $references = $this->buildReferenceList($collection);
 
-        /** @var \Spatie\TypeScriptTransformer\Structures\TransformedType $type */
+        /** @var TransformedType $type */
         foreach ($collection as $type) {
             if ($type->isInline) {
                 continue;

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Support\Typescript\Transformers\EnumTransformer;
 use App\Support\Typescript\Writers\ModuleWriter;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
+use Spatie\TypeScriptTransformer\Collectors\DefaultCollector;
 
 return [
     /*
@@ -23,7 +26,7 @@ return [
 
     'collectors' => [
         // Collects classes with #[Typescript]
-        Spatie\TypeScriptTransformer\Collectors\DefaultCollector::class,
+        DefaultCollector::class,
 
         // Collects all enums
         //        Spatie\TypeScriptTransformer\Collectors\EnumCollector::class,
@@ -51,8 +54,8 @@ return [
     'default_type_replacements' => [
         DateTime::class => 'string',
         DateTimeImmutable::class => 'string',
-        Carbon\CarbonInterface::class => 'string',
-        Carbon\CarbonImmutable::class => 'string',
+        CarbonInterface::class => 'string',
+        CarbonImmutable::class => 'string',
         Carbon\Carbon::class => 'string',
     ],
 
