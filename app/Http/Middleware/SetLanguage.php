@@ -41,16 +41,16 @@ class SetLanguage
 
                 return $mapping;
             })
-            ->filter(function ($mapping) {
-                return str_contains($mapping['locale'], '_');
-            })
-            ->filter(function ($mapping) {
-                return Language::tryFrom($mapping['locale']);
-            })
             ->sortByDesc(function ($locale) {
                 return $locale['factor'];
             });
 
-        return $locales->first()['locale'];
+        $language = Language::tryFrom($locales->first()['locale']);
+
+        if ($language === null) {
+            return Language::default()->value;
+        }
+
+        return $language->value;
     }
 }
