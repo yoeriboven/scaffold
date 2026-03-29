@@ -18,7 +18,7 @@ use App\Http\Middleware\AddInvitationToSession;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('dashboard', DashboardController::class)->name('dashboard');
+Route::get('/', DashboardController::class)->name('dashboard');
 
 /** Onboarding */
 Route::get('onboarding/team', CreateTeamController::class)->name('onboarding.team');

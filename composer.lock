@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8a90f27027261b73a7ba0655f7216fe",
+    "content-hash": "01f65eb8015737a8ae46d6fba3e9ffc2",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -11353,6 +11353,70 @@
                 }
             ],
             "time": "2025-08-26T08:22:30+00:00"
+        },
+        {
+            "name": "spatie/boost-spatie-guidelines",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/boost-spatie-guidelines.git",
+                "reference": "44a206c5225e264e9096909b4dcba1a9bb12e6da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/boost-spatie-guidelines/zipball/44a206c5225e264e9096909b4dcba1a9bb12e6da",
+                "reference": "44a206c5225e264e9096909b4dcba1a9bb12e6da",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^10.0|^11.0|^12.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "orchestra/testbench": "^8.0|^9.0|^10.0",
+                "pestphp/pest": "^2.0|^3.0|^4.0",
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\BoostSpatieGuidelines\\BoostSpatieGuidelinesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\BoostSpatieGuidelines\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Spatie's Laravel & PHP coding guidelines for Laravel Boost",
+            "homepage": "https://github.com/spatie/boost-spatie-guidelines",
+            "keywords": [
+                "boost",
+                "coding-standards",
+                "guidelines",
+                "laravel",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/boost-spatie-guidelines/issues",
+                "source": "https://github.com/spatie/boost-spatie-guidelines/tree/v1.0.0"
+            },
+            "time": "2026-01-26T19:21:06+00:00"
         },
         {
             "name": "spatie/file-system-watcher",

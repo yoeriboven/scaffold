@@ -93,6 +93,7 @@ Run `npx tsc --noEmit` to make sure there are no ts errors.
 ## Libraries
 
 - Reka UI (powers Shadcn Vue): https://reka-ui.com/llms.txt
+    - The Reka UI Checkbox uses v-model (which binds to modelValue), not :checked and @update:checked.
 
 ## Domain knowledge
 
@@ -106,8 +107,9 @@ Run `npx tsc --noEmit` to make sure there are no ts errors.
 
 === .ai/ai rules ===
 
-- When you present a plan only show what it will mean to the user. Like UI/UX decisions. No need to tell me the
-  technical implementation.
+- When you present a plan mainly show what it will mean to the user. Like UI/UX decisions. For the technial
+  implementation a short summary is enough.
+- In plan mode always ask questions until you are sure what I want.
 
 === foundation rules ===
 

@@ -90,6 +90,7 @@ Run `npx tsc --noEmit` to make sure there are no ts errors.
 ## Libraries
 
 - Reka UI (powers Shadcn Vue): https://reka-ui.com/llms.txt
+    - The Reka UI Checkbox uses v-model (which binds to modelValue), not :checked and @update:checked.
 
 ## Domain knowledge
 
