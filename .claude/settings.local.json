@@ -1,26 +1,31 @@
 {
-    "permissions": {
-        "allow": [
-            "mcp__herd__get_site_information",
-            "mcp__laravel-boost__list-routes",
-            "Bash(source ~/.zshrc)",
-            "Bash(npx tsc:*)",
-            "Bash(npm shadcn-vue add:*)",
-            "Bash(npx shadcn-vue@latest add:*)",
-            "Bash(npm run build:*)",
-            "mcp__laravel-boost__application-info",
-            "Bash(vendor/bin/pint:*)",
-            "mcp__shadcnVue__search_items_in_registries",
-            "mcp__laravel-boost__browser-logs",
-            "mcp__laravel-boost__search-docs",
-            "mcp__laravel-boost__read-log-entries",
-            "Bash(python3 -m json.tool)",
-            "Bash(php artisan:*)",
-            "Bash(composer show:*)",
-            "Bash(composer update:*)",
-            "Bash(grep *)"
-        ]
-    },
-    "enableAllProjectMcpServers": true,
-    "enabledMcpjsonServers": ["laravel-boost", "herd"]
+  "permissions": {
+    "allow": [
+      "mcp__herd__get_site_information",
+      "mcp__laravel-boost__list-routes",
+      "Bash(source ~/.zshrc)",
+      "Bash(npx tsc:*)",
+      "Bash(npm shadcn-vue add:*)",
+      "Bash(npx shadcn-vue@latest add:*)",
+      "Bash(npm run build:*)",
+      "mcp__laravel-boost__application-info",
+      "Bash(vendor/bin/pint:*)",
+      "mcp__shadcnVue__search_items_in_registries",
+      "mcp__laravel-boost__browser-logs",
+      "mcp__laravel-boost__search-docs",
+      "mcp__laravel-boost__read-log-entries",
+      "Bash(python3 -m json.tool)",
+      "Bash(php artisan:*)",
+      "Bash(composer show:*)",
+      "Bash(composer update:*)",
+      "Bash(grep *)",
+      "Bash(gh pr *)",
+      "Bash(bash *)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost",
+    "herd"
+  ]
 }
