@@ -20,7 +20,9 @@
       "Bash(composer update:*)",
       "Bash(grep *)",
       "Bash(gh pr *)",
-      "Bash(bash *)"
+      "Bash(bash *)",
+      "Bash(git -C /tmp/starter-kit-vue-starter-kit diff 78fda0c~1 78fda0c -- resources/js/components/TwoFactorSetupModal.vue)",
+      "Bash(git -C /tmp/starter-kit-vue-starter-kit diff 15fedb4~1 15fedb4 -- resources/js/composables/useAppearance.ts)"
     ]
   },
   "enableAllProjectMcpServers": true,
