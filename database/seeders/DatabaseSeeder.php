@@ -5,23 +5,26 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
+    private User $admin;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->admin = $this->seedAdmin();
+    }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+    private function seedAdmin(): User
+    {
+        $admin = User::factory()->create([
+            'name' => 'Yoeri Boven',
+            'email' => 'yoeri@yoeri.me',
         ]);
+
+        $admin->currentTeam()->update(['name' => 'Yoeri\'s Team']);
+
+        return $admin;
     }
 }

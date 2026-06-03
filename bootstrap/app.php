@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\AddInvitationToSession;
 use App\Http\Middleware\ConfigureNightwatchSampling;
 use App\Http\Middleware\EnsureUserHasTimezone;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\RedirectToPendingInvitation;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -33,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: ['sidebar_state']);
 
         $middleware->group('app', [
+            RedirectToPendingInvitation::class,
             EnsureUserHasTimezone::class,
         ]);
 
@@ -49,5 +52,14 @@ return Application::configure(basePath: dirname(__DIR__))
             TrustProxies::class,
             CloudflareTrustProxies::class,
         );
+
+        /**
+         * AddInvitationToSession should always run before auth or on unauthenticated we would
+         * be redirected away and never get to add the invitation to the session.
+         */
+        $middleware->priority([
+            AddInvitationToSession::class,
+            'auth',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {})->create();

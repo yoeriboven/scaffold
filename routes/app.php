@@ -6,6 +6,11 @@ use App\Http\Controllers\Onboarding\SelectTimezoneController;
 use App\Http\Controllers\Onboarding\StoreTimezoneController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
+use App\Http\Controllers\Teams\AcceptInvitationController;
+use App\Http\Controllers\Teams\InviteUserController;
+use App\Http\Controllers\Teams\ShowTeamController;
+use App\Http\Controllers\Teams\UpdateTeamNameController;
+use App\Http\Middleware\AddInvitationToSession;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('', 'Dashboard')->name('dashboard');
@@ -13,6 +18,22 @@ Route::inertia('', 'Dashboard')->name('dashboard');
 /* Onboarding */
 Route::get('onboarding/timezone', SelectTimezoneController::class);
 Route::post('onboarding/timezone', StoreTimezoneController::class);
+
+/* Team */
+Route::get('team', ShowTeamController::class)->name('team');
+
+Route::patch('team/update-name', UpdateTeamNameController::class)->name('team.update.name');
+
+Route::post('team/invite', InviteUserController::class)->name('team.invite');
+
+// Link user clicks to join the team
+Route::middleware([AddInvitationToSession::class])
+    ->get('team/invite/{invitation}', [AcceptInvitationController::class, 'show'])
+    ->name('invitation.accept.show');
+
+// URL of the form to accept the invitation
+Route::post('team/invite/{invitation}', [AcceptInvitationController::class, 'store'])
+    ->name('invitation.accept.store');
 
 /* Settings */
 Route::redirect('settings', '/settings/profile');
