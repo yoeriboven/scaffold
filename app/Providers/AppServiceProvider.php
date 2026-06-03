@@ -29,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDates();
         $this->configureCommands();
         $this->configureURL();
-        $this->configureAuthentication();
         $this->configureEmailRecipientOnLocal();
         $this->configureRateLimiting();
         $this->configurePasswordRules();
@@ -78,17 +77,6 @@ class AppServiceProvider extends ServiceProvider
     private function configureURL(): void
     {
         URL::forceScheme('https');
-    }
-
-    private function configureAuthentication(): void
-    {
-        Authenticate::redirectUsing(static function (Request $request): string {
-            if ($request->routeIs('invitation.accept.*')) {
-                return route('register');
-            }
-
-            return route('login');
-        });
     }
 
     private function configureEmailRecipientOnLocal(): void

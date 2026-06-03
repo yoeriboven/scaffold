@@ -109,7 +109,8 @@
         "stripe-listen": [
             "Composer\\Config::disableProcessTimeout",
             "stripe listen --load-from-webhooks-api --forward-to https://scaffold.test/"
-        ]
+        ],
+        "js": "npm run fix"
     },
     "extra": {
         "laravel": {
