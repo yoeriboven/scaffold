@@ -4,7 +4,7 @@ When translating take the context of the app and the page in account. Never add 
 Always check if the key already exists to avoid duplicates.
 
 ## Vue
-- Always place the <template> above the <script> section
+- Always place the <script> above the <template> section
 - Always use defineModel() instead of creating a prop modelValue and defining an emit
 - To import other components always use the absolute path starting with `@` instead of a relative path.
 
