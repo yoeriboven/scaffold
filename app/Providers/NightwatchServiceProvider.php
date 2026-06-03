@@ -18,7 +18,7 @@ class NightwatchServiceProvider extends ServiceProvider
 {
     private array $jobsToReject = [
         // vraag nightwatch waarom ik die healthqueuejob niet hoef te ignoren
-//        PingOhDearJob::class,
+        PingOhDearJob::class,
     ];
 
     private array $commandsToReject = [

@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'github' => [
+        'workflow_trigger_token' => env('GITHUB_WORKFLOW_TRIGGER_TOKEN'),
+    ],
+
 ];
