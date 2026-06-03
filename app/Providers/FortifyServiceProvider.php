@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
@@ -11,8 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
-use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 
@@ -23,7 +21,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->registerLogoutResponse();
+        //
     }
 
     /**
@@ -52,13 +50,13 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::loginView(fn (Request $request) => Inertia::render('auth/Login', [
             'canResetPassword' => Features::enabled(Features::resetPasswords()),
-            'canRegister' => Features::enabled(Features::registration()),
             'status' => $request->session()->get('status'),
         ]));
 
         Fortify::resetPasswordView(fn (Request $request) => Inertia::render('auth/ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
+            'passwordRules' => Password::defaults()->toPasswordRulesString(),
         ]));
 
         Fortify::requestPasswordResetLinkView(fn (Request $request) => Inertia::render('auth/ForgotPassword', [
@@ -69,11 +67,12 @@ class FortifyServiceProvider extends ServiceProvider
             'status' => $request->session()->get('status'),
         ]));
 
-        Fortify::registerView(fn () => Inertia::render('auth/Register'));
+        Fortify::registerView(fn () => Inertia::render('auth/Register', [
+            'passwordRules' => Password::defaults()->toPasswordRulesString(),
+        ]));
 
         Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
 
-        Fortify::confirmPasswordView(fn () => Inertia::render('auth/ConfirmPassword'));
     }
 
     /**
@@ -90,16 +89,6 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
-    }
 
-    private function registerLogoutResponse(): void
-    {
-        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse
-        {
-            public function toResponse($request)
-            {
-                return Inertia::location(route('home'));
-            }
-        });
     }
 }

@@ -6,22 +6,6 @@
                 "artisan",
                 "boost:mcp"
             ]
-        },
-        "shadcnVue": {
-            "command": "npx",
-            "args": [
-                "shadcn-vue@latest",
-                "mcp"
-            ]
-        },
-        "herd": {
-            "command": "php",
-            "args": [
-                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
-            ],
-            "env": {
-                "SITE_PATH": "/Users/yoeriboven/Sites/scaffold"
-            }
         }
     }
 }

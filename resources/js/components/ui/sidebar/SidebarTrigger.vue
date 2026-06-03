@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { PanelLeftClose, PanelLeftOpen } from "lucide-vue-next"
+import { PanelLeftClose, PanelLeftOpen } from "@lucide/vue"
 import { cn } from "@/lib/utils"
 import { Button } from '@/components/ui/button'
 import { useSidebar } from "./utils"
@@ -23,6 +23,6 @@ const { isMobile, state, toggleSidebar } = useSidebar()
   >
     <PanelLeftOpen v-if="isMobile || state === 'collapsed'" />
     <PanelLeftClose v-else />
-    <span class="sr-only">Toggle Sidebar</span>
+    <span class="sr-only">Toggle sidebar</span>
   </Button>
 </template>

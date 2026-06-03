@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { Form } from '@inertiajs/vue3';
+import { Check, Copy, ScanLine } from '@lucide/vue';
+import { useClipboard } from '@vueuse/core';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import AlertError from '@/components/AlertError.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -17,16 +21,13 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { useAppearance } from '@/composables/useAppearance';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { Form } from '@inertiajs/vue3';
-import { trans } from 'laravel-vue-i18n';
-import { useClipboard } from '@vueuse/core';
-import { Check, Copy, ScanLine } from 'lucide-vue-next';
-import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
+import { confirm } from '@/routes/two-factor';
+import type { TwoFactorConfigContent } from '@/types';
 
-interface Props {
+type Props = {
     requiresConfirmation: boolean;
     twoFactorEnabled: boolean;
-}
+};
 
 const { resolvedAppearance } = useAppearance();
 
@@ -42,37 +43,29 @@ const code = ref<string>('');
 
 const pinInputContainerRef = useTemplateRef('pinInputContainerRef');
 
-const modalConfig = computed<{
-    title: string;
-    description: string;
-    buttonText: string;
-}>(() => {
+const modalConfig = computed<TwoFactorConfigContent>(() => {
     if (props.twoFactorEnabled) {
         return {
-            title: trans('Two-Factor Authentication Enabled'),
-            description: trans(
+            title: 'Two-factor authentication enabled',
+            description:
                 'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
-            ),
-            buttonText: trans('Close'),
+            buttonText: 'Close',
         };
     }
 
     if (showVerificationStep.value) {
         return {
-            title: trans('Verify Authentication Code'),
-            description: trans(
-                'Enter the 6-digit code from your authenticator app',
-            ),
-            buttonText: trans('Continue'),
+            title: 'Verify authentication code',
+            description: 'Enter the 6-digit code from your authenticator app',
+            buttonText: 'Continue',
         };
     }
 
     return {
-        title: trans('Enable Two-Factor Authentication'),
-        description: trans(
+        title: 'Enable two-factor authentication',
+        description:
             'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
-        ),
-        buttonText: trans('Continue'),
+        buttonText: 'Continue',
     };
 });
 
@@ -105,6 +98,7 @@ watch(
     async (isOpen) => {
         if (!isOpen) {
             resetModalState();
+
             return;
         }
 
@@ -202,9 +196,9 @@ watch(
                             <div
                                 class="absolute inset-0 top-1/2 h-px w-full bg-border"
                             />
-                            <span class="relative bg-card px-2 py-1">{{
-                                $t('or, enter the code manually')
-                            }}</span>
+                            <span class="relative bg-card px-2 py-1"
+                                >or, enter the code manually</span
+                            >
                         </div>
 
                         <div
@@ -244,8 +238,8 @@ watch(
 
                 <template v-else>
                     <Form
-                        :action="route('two-factor.confirm')"
-                        method="post"
+                        v-bind="confirm.form()"
+                        error-bag="confirmTwoFactorAuthentication"
                         reset-on-error
                         @finish="code = ''"
                         @success="isOpen = false"
@@ -264,6 +258,7 @@ watch(
                                     v-model="code"
                                     :maxlength="6"
                                     :disabled="processing"
+                                    autofocus
                                 >
                                     <InputOTPGroup>
                                         <InputOTPSlot
@@ -273,12 +268,7 @@ watch(
                                         />
                                     </InputOTPGroup>
                                 </InputOTP>
-                                <InputError
-                                    :message="
-                                        errors?.confirmTwoFactorAuthentication
-                                            ?.code
-                                    "
-                                />
+                                <InputError :message="errors?.code" />
                             </div>
 
                             <div class="flex w-full items-center space-x-5">
@@ -289,14 +279,14 @@ watch(
                                     @click="showVerificationStep = false"
                                     :disabled="processing"
                                 >
-                                    {{ $t('Back') }}
+                                    Back
                                 </Button>
                                 <Button
                                     type="submit"
                                     class="w-auto flex-1"
                                     :disabled="processing || code.length < 6"
                                 >
-                                    {{ $t('Confirm') }}
+                                    Confirm
                                 </Button>
                             </div>
                         </div>

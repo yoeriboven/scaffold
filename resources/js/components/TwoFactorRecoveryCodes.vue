@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { Form } from '@inertiajs/vue3';
+import { Eye, EyeOff, LockKeyhole, RefreshCw } from '@lucide/vue';
+import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
 import AlertError from '@/components/AlertError.vue';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,10 +12,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { Form } from '@inertiajs/vue3';
-import { trans } from 'laravel-vue-i18n';
-import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
-import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
+import { regenerateRecoveryCodes } from '@/routes/two-factor';
 
 const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
 const isRecoveryCodesVisible = ref<boolean>(false);
@@ -42,14 +42,11 @@ onMounted(async () => {
     <Card class="w-full">
         <CardHeader>
             <CardTitle class="flex gap-3">
-                <LockKeyhole class="size-4" />{{ $t('2FA Recovery Codes') }}
+                <LockKeyhole class="size-4" />2FA recovery codes
             </CardTitle>
             <CardDescription>
-                {{
-                    $t(
-                        'Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.',
-                    )
-                }}
+                Recovery codes let you regain access if you lose your 2FA
+                device. Store them in a secure password manager.
             </CardDescription>
         </CardHeader>
         <CardContent>
@@ -61,16 +58,13 @@ onMounted(async () => {
                         :is="isRecoveryCodesVisible ? EyeOff : Eye"
                         class="size-4"
                     />
-                    {{
-                        isRecoveryCodesVisible
-                            ? $t('Hide Recovery Codes')
-                            : $t('View Recovery Codes')
-                    }}
+                    {{ isRecoveryCodesVisible ? 'Hide' : 'View' }} recovery
+                    codes
                 </Button>
 
                 <Form
                     v-if="isRecoveryCodesVisible && recoveryCodesList.length"
-                    :action="route('two-factor.regenerate-recovery-codes')"
+                    v-bind="regenerateRecoveryCodes.form()"
                     method="post"
                     :options="{ preserveScroll: true }"
                     @success="fetchRecoveryCodes"
@@ -81,7 +75,7 @@ onMounted(async () => {
                         type="submit"
                         :disabled="processing"
                     >
-                        <RefreshCw /> {{ $t('Regenerate Codes') }}
+                        <RefreshCw /> Regenerate codes
                     </Button>
                 </Form>
             </div>
@@ -117,12 +111,10 @@ onMounted(async () => {
                         </div>
                     </div>
                     <p class="text-xs text-muted-foreground select-none">
-                        {{
-                            $t(
-                                'Each recovery code can be used once to access your account and will be removed after use. If you need more, click :link above.',
-                                { link: trans('Regenerate Codes') },
-                            )
-                        }}
+                        Each recovery code can be used once to access your
+                        account and will be removed after use. If you need more,
+                        click
+                        <span class="font-bold">Regenerate codes</span> above.
                     </p>
                 </div>
             </div>

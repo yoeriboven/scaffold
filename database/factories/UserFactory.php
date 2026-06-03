@@ -1,13 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Database\Factories;
 
-use App\Domains\Teams\Enum\Permissions;
-use App\Domains\Teams\Enum\TeamRole;
-use App\Domains\Teams\Models\Team;
-use App\Enums\Language;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -39,7 +33,6 @@ class UserFactory extends Factory
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
-            'language' => Language::default(),
         ];
     }
 
@@ -48,7 +41,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
@@ -58,21 +51,10 @@ class UserFactory extends Factory
      */
     public function withTwoFactor(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'two_factor_secret' => encrypt('secret'),
             'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1'])),
             'two_factor_confirmed_at' => now(),
         ]);
-    }
-
-    public function asTeamAdmin(): static
-    {
-        return $this->hasAttached(
-            Team::factory(),
-            [
-                'role' => TeamRole::ADMIN,
-                'permissions' => Permissions::forTeamRole(TeamRole::ADMIN),
-            ]
-        );
     }
 }

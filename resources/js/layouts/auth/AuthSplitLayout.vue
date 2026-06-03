@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Link, usePage } from '@inertiajs/vue3';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import { home } from '@/routes';
 
 const page = usePage();
 const name = page.props.name;
-const quote = page.props.quote;
 
 defineProps<{
     title?: string;
@@ -21,20 +21,12 @@ defineProps<{
         >
             <div class="absolute inset-0 bg-zinc-900" />
             <Link
-                :href="route('dashboard')"
+                :href="home()"
                 class="relative z-20 flex items-center text-lg font-medium"
             >
                 <AppLogoIcon class="mr-2 size-8 fill-current text-white" />
                 {{ name }}
             </Link>
-            <div v-if="quote" class="relative z-20 mt-auto">
-                <blockquote class="space-y-2">
-                    <p class="text-lg">&ldquo;{{ quote.message }}&rdquo;</p>
-                    <footer class="text-sm text-neutral-300">
-                        {{ quote.author }}
-                    </footer>
-                </blockquote>
-            </div>
         </div>
         <div class="lg:p-8">
             <div

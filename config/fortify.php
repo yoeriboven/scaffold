@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Laravel\Fortify\Features;
 
 return [
@@ -75,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/app/',
+    'home' => '/dashboard',
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +101,7 @@ return [
     |
     */
 
-    'middleware' => ['web', 'guest'],
+    'middleware' => ['web'],
 
     /*
     |--------------------------------------------------------------------------
@@ -151,7 +149,7 @@ return [
         Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,
-            'confirmPassword' => true,
+            'confirmPassword' => false,
             // 'window' => 0
         ]),
     ],

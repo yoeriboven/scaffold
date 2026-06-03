@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+import { BookOpen, FolderGit2, LayoutGrid } from '@lucide/vue';
+import AppLogo from '@/components/AppLogo.vue';
+import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -10,32 +14,29 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { useActiveUrl } from '@/composables/useActiveUrl';
-import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Users } from 'lucide-vue-next';
-import AppLogo from './AppLogo.vue';
-
-const { urlIsActive } = useActiveUrl();
+import { dashboard } from '@/routes';
+import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: route('dashboard'),
+        href: dashboard(),
         icon: LayoutGrid,
     },
 ];
 
-const footerNavItems: NavItem[] = usePage().props.auth.user.permissions
-    .manage_team
-    ? [
-          {
-              title: 'Team',
-              href: route('team'),
-              icon: Users,
-          },
-      ]
-    : [];
+const footerNavItems: NavItem[] = [
+    {
+        title: 'Repository',
+        href: 'https://github.com/laravel/vue-starter-kit',
+        icon: FolderGit2,
+    },
+    {
+        title: 'Documentation',
+        href: 'https://laravel.com/docs/starter-kits#vue',
+        icon: BookOpen,
+    },
+];
 </script>
 
 <template>
@@ -44,7 +45,7 @@ const footerNavItems: NavItem[] = usePage().props.auth.user.permissions
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
+                        <Link :href="dashboard()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
@@ -57,23 +58,7 @@ const footerNavItems: NavItem[] = usePage().props.auth.user.permissions
         </SidebarContent>
 
         <SidebarFooter>
-            <SidebarMenu>
-                <SidebarMenuItem
-                    v-for="item in footerNavItems"
-                    :key="item.title"
-                >
-                    <SidebarMenuButton
-                        as-child
-                        :is-active="urlIsActive(item.href)"
-                        :tooltip="item.title"
-                    >
-                        <Link :href="item.href">
-                            <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
+            <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>
