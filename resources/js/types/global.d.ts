@@ -44,7 +44,10 @@ interface TurnstileRenderOptions {
 }
 
 interface Turnstile {
-    render: (container: string | HTMLElement, options: TurnstileRenderOptions) => string;
+    render: (
+        container: string | HTMLElement,
+        options: TurnstileRenderOptions,
+    ) => string;
     reset: (widgetId?: string) => void;
     remove: (widgetId?: string) => void;
     getResponse: (widgetId?: string) => string | undefined;

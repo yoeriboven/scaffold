@@ -15,7 +15,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 defineProps<{
     passwordRules: string;
     isLocal: boolean;
-}>()
+}>();
 
 defineOptions({
     layout: [

@@ -12,7 +12,8 @@ defineOptions({
         AuthLayout,
         {
             title: 'Email verification',
-            description: 'Please verify your email address by clicking on the link we just emailed to you.',
+            description:
+                'Please verify your email address by clicking on the link we just emailed to you.',
         },
     ],
 });
