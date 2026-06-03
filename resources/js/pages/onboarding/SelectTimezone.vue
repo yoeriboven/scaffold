@@ -8,11 +8,14 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 
 defineOptions({ layout: AuthLayout });
 
-defineProps<{
+const props = defineProps<{
     timezones: string[];
 }>();
 
-// const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const defaultTimezone = props.timezones.includes(detectedTimezone)
+    ? detectedTimezone
+    : undefined;
 </script>
 
 <template>
@@ -23,7 +26,12 @@ defineProps<{
     >
         <div>
             <select name="timezone">
-                <option v-for="tz in timezones" :key="tz" :value="tz">
+                <option
+                    v-for="tz in timezones"
+                    :key="tz"
+                    :value="tz"
+                    :selected="tz === defaultTimezone"
+                >
                     {{ tz }}
                 </option>
             </select>

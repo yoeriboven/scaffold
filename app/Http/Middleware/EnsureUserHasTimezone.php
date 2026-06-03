@@ -13,7 +13,6 @@ class EnsureUserHasTimezone
 {
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
         if ($this->routeDoesNotRequireSetTimezone($request)) {
             return $next($request);
         }
