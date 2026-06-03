@@ -1,12 +1,17 @@
 {
     "agents": [
-        "amp",
         "claude_code"
     ],
     "cloud": false,
     "guidelines": true,
     "mcp": true,
-    "nightwatch": false,
+    "nightwatch": true,
+    "packages": [
+        "spatie/boost-spatie-guidelines",
+        "spatie/laravel-backup",
+        "barryvdh/laravel-debugbar",
+        "spatie/laravel-ray"
+    ],
     "sail": false,
     "skills": [
         "fortify-development",
@@ -16,6 +21,10 @@
         "wayfinder-development",
         "pest-testing",
         "inertia-vue-development",
-        "tailwindcss-development"
+        "tailwindcss-development",
+        "laravel-backup",
+        "debug-using-debugbar",
+        "spatie-laravel-php-standards",
+        "debugging-output-and-previewing-html-using-ray"
     ]
 }
