@@ -12,7 +12,7 @@ Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 Route::get('onboarding/timezone', SelectTimezoneController::class);
 Route::post('onboarding/timezone', StoreTimezoneController::class);
 
-/** Settings */
+/* Settings */
 Route::redirect('settings', '/settings/profile');
 
 Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
