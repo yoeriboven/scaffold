@@ -8,6 +8,8 @@ import ManageTwoFactor from '@/components/ManageTwoFactor.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/AppLayout.vue';
+import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/security';
 
 type Props = {
@@ -17,14 +19,20 @@ type Props = {
 const props = defineProps<Props>();
 
 defineOptions({
-    layout: {
-        breadcrumbs: [
+    layout: [
+        [
+            AppLayout,
             {
-                title: 'Security settings',
-                href: edit(),
+                breadcrumbs: [
+                    {
+                        title: 'Security settings',
+                        href: edit(),
+                    },
+                ],
             },
         ],
-    },
+        SettingsLayout,
+    ],
 });
 </script>
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+Route::inertia('', 'Dashboard')->name('dashboard');
 
 /* Onboarding */
 Route::get('onboarding/timezone', SelectTimezoneController::class);

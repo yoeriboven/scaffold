@@ -1,3 +1,7 @@
 <template>timezone</template>
 
-<script setup></script>
+<script setup lang="ts">
+import AuthLayout from '@/layouts/AuthLayout.vue';
+
+defineOptions({ layout: AuthLayout });
+</script>

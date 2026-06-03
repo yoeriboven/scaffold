@@ -3,16 +3,25 @@ import { Head } from '@inertiajs/vue3';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import Heading from '@/components/Heading.vue';
 import { edit } from '@/routes/appearance';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { dashboard } from '@/routes';
+import SettingsLayout from '@/layouts/settings/Layout.vue';
 
 defineOptions({
-    layout: {
-        breadcrumbs: [
+    layout: [
+        [
+            AppLayout,
             {
-                title: 'Appearance settings',
-                href: edit(),
+                breadcrumbs: [
+                    {
+                        title: 'Appearance settings',
+                        href: edit(),
+                    },
+                ],
             },
         ],
-    },
+        SettingsLayout,
+    ],
 });
 </script>
 

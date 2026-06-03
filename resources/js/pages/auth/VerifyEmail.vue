@@ -5,13 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 defineOptions({
-    layout: {
-        title: 'Email verification',
-        description:
-            'Please verify your email address by clicking on the link we just emailed to you.',
-    },
+    layout: [
+        AuthLayout,
+        {
+            title: 'Email verification',
+            description: 'Please verify your email address by clicking on the link we just emailed to you.',
+        },
+    ],
 });
 
 defineProps<{

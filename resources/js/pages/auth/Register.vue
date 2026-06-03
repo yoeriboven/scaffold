@@ -10,17 +10,21 @@ import { Spinner } from '@/components/ui/spinner';
 import { initializeTurnstile } from '@/composables/useTurnstile';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 defineProps<{
     passwordRules: string;
     isLocal: boolean;
-}>();
+}>()
 
 defineOptions({
-    layout: {
-        title: 'Create an account',
-        description: 'Enter your details below to create your account',
-    },
+    layout: [
+        AuthLayout,
+        {
+            title: 'Create an account',
+            description: 'Enter your details below to create your account',
+        },
+    ],
 });
 
 initializeTurnstile();

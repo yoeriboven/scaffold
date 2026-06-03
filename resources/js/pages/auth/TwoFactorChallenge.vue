@@ -10,7 +10,19 @@ import {
     InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { store } from '@/routes/two-factor/login';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { TwoFactorConfigContent } from '@/types';
+
+defineOptions({
+    layout: [
+        AuthLayout,
+        {
+            title: 'Authentication code',
+            description:
+                'Enter the authentication code provided by your authenticator application.',
+        },
+    ],
+});
 
 const showRecoveryInput = ref<boolean>(false);
 const code = ref<string>('');

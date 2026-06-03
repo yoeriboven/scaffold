@@ -11,12 +11,16 @@ import { Spinner } from '@/components/ui/spinner';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 defineOptions({
-    layout: {
-        title: 'Log in to your account',
-        description: 'Enter your email and password below to log in',
-    },
+    layout: [
+        AuthLayout,
+        {
+            title: 'Log in to your account',
+            description: 'Enter your email and password below to log in',
+        },
+    ],
 });
 
 defineProps<{
