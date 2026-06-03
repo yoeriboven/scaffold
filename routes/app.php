@@ -26,5 +26,3 @@ Route::get('settings/security', [SecurityController::class, 'edit'])
 Route::put('settings/password', [SecurityController::class, 'update'])
     ->middleware('throttle:6,1')
     ->name('user-password.update');
-
-Route::inertia('settings/appearance', 'settings/Appearance')->name('appearance.edit');

@@ -29,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         base_path('routes/console/schedule.php'),
     ])
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->encryptCookies(except: ['sidebar_state']);
 
         $middleware->group('app', [
             EnsureUserHasTimezone::class,
@@ -40,7 +40,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->web(append: [
-            HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
