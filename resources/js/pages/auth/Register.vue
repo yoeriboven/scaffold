@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
-import { computed, onMounted, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -8,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { initializeTurnstile } from '@/composables/useTurnstile';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 
@@ -23,38 +23,7 @@ defineOptions({
     },
 });
 
-const formRef = ref();
-
-const turnstileEnabled = computed(function () {
-    const key = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY;
-    return true;
-    return key !== null && key !== '' && key.trim() !== '';
-});
-
-onMounted(() => {
-    if (turnstileEnabled.value) {
-        startTurnstile();
-    }
-});
-
-function startTurnstile() {
-    const script = document.createElement('script');
-    script.src =
-        'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit';
-    script.async = true;
-    document.head.appendChild(script);
-
-    // formRef.value['cf-turnstile-response'] = 'xxx'
-
-    window.onTurnstileLoad = () => {
-        window.turnstile.render('#turnstile-container', {
-            sitekey: import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY,
-            callback: (token) => {
-                // form['cf-turnstile-response'] = token;
-            },
-        });
-    };
-}
+initializeTurnstile();
 </script>
 
 <template>

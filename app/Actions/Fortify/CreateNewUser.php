@@ -5,6 +5,7 @@ namespace App\Actions\Fortify;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\Models\User;
+use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
@@ -19,10 +20,10 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        dd($input);
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            'cf-turnstile-response' => TurnstileRule::class,
         ])->validate();
 
         return User::create([
