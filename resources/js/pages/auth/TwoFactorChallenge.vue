@@ -9,8 +9,8 @@ import {
     InputOTPGroup,
     InputOTPSlot,
 } from '@/components/ui/input-otp';
-import { store } from '@/routes/two-factor/login';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import { store } from '@/routes/two-factor/login';
 import type { TwoFactorConfigContent } from '@/types';
 
 defineOptions({
