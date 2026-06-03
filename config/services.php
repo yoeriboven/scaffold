@@ -39,4 +39,8 @@ return [
         'workflow_trigger_token' => env('GITHUB_WORKFLOW_TRIGGER_TOKEN'),
     ],
 
+    'turnstile' => [
+        'secret' => env('CLOUDFLARE_TURNSTILE_SECRET_KEY', ''),
+    ],
+
 ];

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
+import { computed, onMounted, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -12,6 +13,7 @@ import { store } from '@/routes/register';
 
 defineProps<{
     passwordRules: string;
+    isLocal: boolean;
 }>();
 
 defineOptions({
@@ -20,12 +22,46 @@ defineOptions({
         description: 'Enter your details below to create your account',
     },
 });
+
+const formRef = ref();
+
+const turnstileEnabled = computed(function () {
+    const key = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY;
+    return true;
+    return key !== null && key !== '' && key.trim() !== '';
+});
+
+onMounted(() => {
+    if (turnstileEnabled.value) {
+        startTurnstile();
+    }
+});
+
+function startTurnstile() {
+    const script = document.createElement('script');
+    script.src =
+        'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit';
+    script.async = true;
+    document.head.appendChild(script);
+
+    // formRef.value['cf-turnstile-response'] = 'xxx'
+
+    window.onTurnstileLoad = () => {
+        window.turnstile.render('#turnstile-container', {
+            sitekey: import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY,
+            callback: (token) => {
+                // form['cf-turnstile-response'] = token;
+            },
+        });
+    };
+}
 </script>
 
 <template>
     <Head title="Register" />
 
     <Form
+        ref="formRef"
         v-bind="store.form()"
         :reset-on-success="['password', 'password_confirmation']"
         v-slot="{ errors, processing }"
@@ -43,6 +79,7 @@ defineOptions({
                     autocomplete="name"
                     name="name"
                     placeholder="Full name"
+                    :defaultValue="isLocal ? 'Test user' : undefined"
                 />
                 <InputError :message="errors.name" />
             </div>
@@ -57,6 +94,7 @@ defineOptions({
                     autocomplete="email"
                     name="email"
                     placeholder="email@example.com"
+                    :defaultValue="isLocal ? 'test@yoeri.me' : undefined"
                 />
                 <InputError :message="errors.email" />
             </div>
@@ -71,6 +109,7 @@ defineOptions({
                     name="password"
                     placeholder="Password"
                     :passwordrules="passwordRules"
+                    :defaultValue="isLocal ? 'password' : undefined"
                 />
                 <InputError :message="errors.password" />
             </div>
@@ -85,8 +124,18 @@ defineOptions({
                     name="password_confirmation"
                     placeholder="Confirm password"
                     :passwordrules="passwordRules"
+                    :defaultValue="isLocal ? 'password' : undefined"
                 />
                 <InputError :message="errors.password_confirmation" />
+            </div>
+
+            <div>
+                <div id="turnstile-container" class="mt-4"></div>
+
+                <InputError
+                    class="mt-2"
+                    :message="errors['cf-turnstile-response']"
+                />
             </div>
 
             <Button

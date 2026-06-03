@@ -69,6 +69,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::registerView(fn () => Inertia::render('auth/Register', [
             'passwordRules' => Password::defaults()->toPasswordRulesString(),
+            'isLocal' => app()->isLocal(),
         ]));
 
         Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
