@@ -41,7 +41,7 @@ class InviteUserController
 
         //        toast()->success(sprintf('%s %s', trans('Invitation sent to'), $request->email));
 
-        return to_route('team');
+        return to_action(ShowTeamController::class);
     }
 
     protected function rateLimiterKey(int $teamId, ?string $email): string

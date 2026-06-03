@@ -11,6 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('invitations', function (Blueprint $table) {
+            $table->id();
             $table->string('public_id', 10)->unique();
 
             $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();

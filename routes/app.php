@@ -19,9 +19,9 @@ Route::get('onboarding/timezone', SelectTimezoneController::class);
 Route::post('onboarding/timezone', StoreTimezoneController::class);
 
 /* Team */
-Route::get('team', ShowTeamController::class)->name('team');
+Route::get('team', ShowTeamController::class);
 
-Route::post('team/invite', InviteUserController::class)->name('team.invite');
+Route::post('team/invite', InviteUserController::class);
 
 // Link user clicks to join the team
 Route::middleware([AddInvitationToSession::class])

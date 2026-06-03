@@ -20,7 +20,7 @@ class ShowTeamController
             403
         );
 
-        return Inertia::render('Teams/Index', [
+        return Inertia::render('teams/Index', [
             'team' => [
                 'members' => currentTeam()
                     ->users()
@@ -29,6 +29,7 @@ class ShowTeamController
                     ->map(function (User $member) {
                         return [
                             'name' => $member->name,
+                            'email' => $member->email,
                             'role' => TeamRole::from($member->pivot->role)->label(),
                         ];
                     }),
