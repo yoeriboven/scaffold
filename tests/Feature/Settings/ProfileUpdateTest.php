@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Http\Controllers\Settings\ProfileController;
 use App\Models\User;
 
 test('profile page is displayed', function () {
@@ -7,7 +10,7 @@ test('profile page is displayed', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('profile.edit'));
+        ->get(action([ProfileController::class, 'edit']));
 
     $response->assertOk();
 });
@@ -17,14 +20,14 @@ test('profile information can be updated', function () {
 
     $response = $this
         ->actingAs($user)
-        ->patch(route('profile.update'), [
+        ->patch(action([ProfileController::class, 'update']), [
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('profile.edit'));
+        ->assertRedirectToAction([ProfileController::class, 'edit']);
 
     $user->refresh();
 
@@ -38,14 +41,14 @@ test('email verification status is unchanged when the email address is unchanged
 
     $response = $this
         ->actingAs($user)
-        ->patch(route('profile.update'), [
+        ->patch(action([ProfileController::class, 'update']), [
             'name' => 'Test User',
             'email' => $user->email,
         ]);
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('profile.edit'));
+        ->assertRedirectToAction([ProfileController::class, 'edit']);
 
     expect($user->refresh()->email_verified_at)->not->toBeNull();
 });
@@ -61,7 +64,7 @@ test('user can delete their account', function () {
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('home'));
+        ->assertRedirect(route('front.home'));
 
     $this->assertGuest();
     expect($user->fresh())->toBeNull();
@@ -72,14 +75,14 @@ test('correct password must be provided to delete account', function () {
 
     $response = $this
         ->actingAs($user)
-        ->from(route('profile.edit'))
-        ->delete(route('profile.destroy'), [
+        ->from(action([ProfileController::class, 'edit']))
+        ->delete(action([ProfileController::class, 'destroy']), [
             'password' => 'wrong-password',
         ]);
 
     $response
         ->assertSessionHasErrors('password')
-        ->assertRedirect(route('profile.edit'));
+        ->assertRedirectToAction([ProfileController::class, 'edit']);
 
     expect($user->fresh())->not->toBeNull();
 });

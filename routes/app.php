@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Onboarding\SelectTimezoneController;
 use App\Http\Controllers\Onboarding\StoreTimezoneController;
 use App\Http\Controllers\Settings\ProfileController;

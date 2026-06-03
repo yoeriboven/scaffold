@@ -19,5 +19,3 @@ Schedule::command('cloudflare:reload')->dailyAt('09:00');
 Schedule::command(DispatchQueueCheckJobsCommand::class)->everyMinute();
 
 Schedule::command('horizon:snapshot')->everyFiveMinutes();
-
-Schedule::command('calendar:send-showing-reminders')->everyMinute();

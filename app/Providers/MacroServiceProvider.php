@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Http\Request;
@@ -13,7 +15,7 @@ class MacroServiceProvider extends ServiceProvider
         Request::macro('usesController', function (string|array $controllers) {
             $controllers = Arr::wrap($controllers);
 
-            return $this->route() && in_array($this->route()->getControllerClass(), $controllers);
+            return $this->route() && in_array($this->route()->getControllerClass(), $controllers, true);
         });
     }
 }

@@ -61,15 +61,12 @@
             "npm install",
             "npm run build"
         ],
-        "dev": [
-            "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve --host=localhost\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
-        ],
-        "lint": [
-            "pint --parallel"
-        ],
-        "lint:check": [
-            "pint --parallel --test"
+        "reset": [
+            "rm -rf node_modules/ vendor/ storage/app/public/*",
+            "composer install --ansi",
+            "@php artisan migrate:fresh --seed",
+            "npm ci",
+            "npm run build"
         ],
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
@@ -78,10 +75,13 @@
             "npm run types:check",
             "@test"
         ],
-        "test": [
-            "@php artisan config:clear --ansi",
-            "@lint:check",
-            "@php artisan test"
+        "test": "@php artisan test --parallel --order-by random --exclude-group=architecture,browser",
+        "test:architecture": "@php artisan test --parallel --order-by random --group architecture",
+        "test:browser": "@php artisan test --parallel --order-by random --group browser",
+        "test:all": [
+            "@test",
+            "@test:architecture",
+            "@test:browser"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
