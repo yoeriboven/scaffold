@@ -43,7 +43,7 @@ class SecurityController
             'password' => $request->password,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Password updated.')]);
+        toast()->success(trans('Password updated.'));
 
         return back();
     }

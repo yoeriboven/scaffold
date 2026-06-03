@@ -39,7 +39,7 @@ class ProfileController
 
         $request->user()->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
+        toast()->success(trans('Profile updated.'));
 
         return to_route('profile.edit');
     }

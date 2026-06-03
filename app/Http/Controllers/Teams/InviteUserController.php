@@ -39,7 +39,7 @@ class InviteUserController
             strtotime('1 day', 0)
         );
 
-        //        toast()->success(sprintf('%s %s', trans('Invitation sent to'), $request->email));
+        toast()->success(sprintf('%s %s', trans('Invitation sent to'), $request->email));
 
         return to_action(ShowTeamController::class);
     }

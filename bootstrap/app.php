@@ -103,7 +103,7 @@ return Application::configure(basePath: dirname(__DIR__))
             //                default => 'Something went wrong with the request. We have been notified.',
             //            };
 
-            //            toast()->error($message);
+            toast()->error($message);
 
             return back();
         });

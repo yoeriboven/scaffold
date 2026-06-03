@@ -11,6 +11,6 @@ export function initializeFlashToast(): void {
             return;
         }
 
-        toast[data.type](data.message);
+        toast[data.level](data.message);
     });
 }
