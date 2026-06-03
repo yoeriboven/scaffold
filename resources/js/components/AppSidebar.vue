@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { LayoutGrid, Users } from '@lucide/vue';
+import ShowTeamController from '@/actions/App/Http/Controllers/Teams/ShowTeamController';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -16,7 +17,6 @@ import {
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
-import ShowTeamController from '@/actions/App/Http/Controllers/Teams/ShowTeamController';
 
 const mainNavItems: NavItem[] = [
     {

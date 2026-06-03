@@ -23,7 +23,8 @@ defineOptions({
         AuthLayout,
         {
             title: 'Select your timezone',
-            description: 'We use this to show dates and times in your local time',
+            description:
+                'We use this to show dates and times in your local time',
         },
     ],
 });
@@ -44,11 +45,7 @@ const defaultTimezone = props.timezones.includes(detectedTimezone)
     >
         <div class="grid gap-2">
             <Label for="timezone">Timezone</Label>
-            <Select
-                name="timezone"
-                :default-value="defaultTimezone"
-                autofocus
-            >
+            <Select name="timezone" :default-value="defaultTimezone" autofocus>
                 <SelectTrigger id="timezone" class="w-full" :tabindex="1">
                     <SelectValue placeholder="Select a timezone" />
                 </SelectTrigger>
