@@ -1,0 +1,85 @@
+name: Composer Security Patch
+
+on:
+  repository_dispatch:
+    types: [composer-security-advisories-failed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    env:
+      PACKAGES: ${{ join(github.event.client_payload.packages, ' ') }}
+      PACKAGES_LIST: ${{ join(github.event.client_payload.packages, ', ') }}
+      BRANCH: security/composer-patches-${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          token: ${{ secrets.CREATE_PR_TOKEN }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
+        with:
+          php-version: 8.5
+          extensions: mbstring, zip
+          coverage: none
+
+      - name: Update packages
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$PACKAGES" ]]; then
+            echo "No packages in payload — nothing to patch."
+            exit 0
+          fi
+
+          declare -A OLD_VERSIONS
+          for pkg in $PACKAGES; do
+            OLD_VERSIONS[$pkg]=$(jq -r --arg p "$pkg" '(.packages + .["packages-dev"])[] | select(.name == $p) | .version' composer.lock)
+          done
+
+          composer update $PACKAGES --with-all-dependencies --no-interaction --prefer-dist --no-progress --no-scripts
+          
+          if ! composer audit --no-interaction; then
+            echo "::error::Update ran but an advisory is still present — likely the fix is outside the declared version constraint. Needs a manual major bump."
+            exit 1
+          fi
+
+          {
+            echo "| Package | Old | New |"
+            echo "| --- | --- | --- |"
+            for pkg in $PACKAGES; do
+              new=$(jq -r --arg p "$pkg" '(.packages + .["packages-dev"])[] | select(.name == $p) | .version' composer.lock)
+              echo "| \`$pkg\` | \`${OLD_VERSIONS[$pkg]:-—}\` | \`${new:-—}\` |"
+            done
+          } > /tmp/version-table.md
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ secrets.CREATE_PR_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add composer.json composer.lock
+          git commit -m "chore(security): patch $PACKAGES_LIST"
+          git push -u origin "$BRANCH"
+
+          TABLE=$(cat /tmp/version-table.md)
+          BODY="This PR was opened automatically after a Composer security advisory was detected.
+
+          Laravel Health periodically runs a composer audit. When it surfaces a vulnerability, the app dispatches a \`repository_dispatch\` event to GitHub, and this workflow updates the affected packages and opens this PR for review.
+
+          $TABLE"
+
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --assignee yoeriboven \
+            --title "Security: patch $PACKAGES_LIST" \
+            --body "$BODY"

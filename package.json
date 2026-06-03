@@ -56,5 +56,9 @@
         "@tailwindcss/oxide-win32-x64-msvc": "^4.0.1",
         "lightningcss-linux-x64-gnu": "^1.29.1",
         "lightningcss-win32-x64-msvc": "^1.29.1"
+    },
+    "engines": {
+        "node": ">=24.15.0",
+        "npm": ">=11.13.0"
     }
 }
