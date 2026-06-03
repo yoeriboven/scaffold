@@ -22,12 +22,7 @@ defineExpose({
 
 <template>
     <div class="relative">
-        <Input
-            ref="inputRef"
-            :type="showPassword ? 'text' : 'password'"
-            :class="cn('pr-10', props.class)"
-            v-bind="$attrs"
-        />
+        <Input ref="inputRef" :type="showPassword ? 'text' : 'password'" :class="cn('pr-10', props.class)" v-bind="$attrs" />
         <button
             type="button"
             @click="showPassword = !showPassword"

@@ -5,15 +5,7 @@ import ShowTeamController from '@/actions/App/Http/Controllers/Teams/ShowTeamCon
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
@@ -50,11 +42,7 @@ const { isCurrentUrl } = useCurrentUrl();
         <SidebarFooter>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton
-                        as-child
-                        :is-active="isCurrentUrl(ShowTeamController())"
-                        tooltip="Team"
-                    >
+                    <SidebarMenuButton as-child :is-active="isCurrentUrl(ShowTeamController())" tooltip="Team">
                         <Link :href="ShowTeamController()">
                             <Users />
                             <span>Team</span>

@@ -2,14 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import ShowTeamController from '@/actions/App/Http/Controllers/Teams/ShowTeamController';
 import InviteTeamMemberDialog from '@/components/InviteTeamMemberDialog.vue';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 
 type Member = {
@@ -73,10 +66,7 @@ defineOptions({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow
-                            v-for="member in team.members"
-                            :key="member.email"
-                        >
+                        <TableRow v-for="member in team.members" :key="member.email">
                             <TableCell class="px-4 py-4 font-medium">
                                 {{ member.name }}
                             </TableCell>
@@ -100,11 +90,7 @@ defineOptions({
                 <h2 class="text-lg font-medium">Pending invitations</h2>
                 <p class="mt-1 text-sm text-muted-foreground">
                     {{ team.invitations.length }}
-                    {{
-                        team.invitations.length === 1
-                            ? 'invitation'
-                            : 'invitations'
-                    }}
+                    {{ team.invitations.length === 1 ? 'invitation' : 'invitations' }}
                     waiting for acceptance
                 </p>
             </div>
@@ -117,10 +103,7 @@ defineOptions({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow
-                            v-for="invitation in team.invitations"
-                            :key="invitation.email"
-                        >
+                        <TableRow v-for="invitation in team.invitations" :key="invitation.email">
                             <TableCell class="px-4 py-4 font-medium">
                                 {{ invitation.email }}
                             </TableCell>

@@ -19,8 +19,7 @@ export function initializeTurnstile(selector = '#turnstile-container') {
 
     function startTurnstile() {
         const script = document.createElement('script');
-        script.src =
-            'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit';
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit';
         script.async = true;
         document.head.appendChild(script);
 

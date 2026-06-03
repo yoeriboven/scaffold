@@ -4,13 +4,7 @@ import StoreTimezoneController from '@/actions/App/Http/Controllers/Onboarding/S
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 
@@ -23,26 +17,19 @@ defineOptions({
         AuthLayout,
         {
             title: 'Select your timezone',
-            description:
-                'We use this to show dates and times in your local time',
+            description: 'We use this to show dates and times in your local time',
         },
     ],
 });
 
 const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const defaultTimezone = props.timezones.includes(detectedTimezone)
-    ? detectedTimezone
-    : undefined;
+const defaultTimezone = props.timezones.includes(detectedTimezone) ? detectedTimezone : undefined;
 </script>
 
 <template>
     <Head title="Select timezone" />
 
-    <Form
-        v-bind="StoreTimezoneController.form()"
-        v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
-    >
+    <Form v-bind="StoreTimezoneController.form()" v-slot="{ errors, processing }" class="flex flex-col gap-6">
         <div class="grid gap-2">
             <Label for="timezone">Timezone</Label>
             <Select name="timezone" :default-value="defaultTimezone" autofocus>
@@ -58,12 +45,7 @@ const defaultTimezone = props.timezones.includes(detectedTimezone)
             <InputError :message="errors.timezone" />
         </div>
 
-        <Button
-            type="submit"
-            class="mt-2 w-full"
-            :tabindex="2"
-            :disabled="processing"
-        >
+        <Button type="submit" class="mt-2 w-full" :tabindex="2" :disabled="processing">
             <Spinner v-if="processing" />
             Continue
         </Button>
