@@ -9,7 +9,6 @@ use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\Teams\AcceptInvitationController;
 use App\Http\Controllers\Teams\InviteUserController;
 use App\Http\Controllers\Teams\ShowTeamController;
-use App\Http\Controllers\Teams\UpdateTeamNameController;
 use App\Http\Middleware\AddInvitationToSession;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +20,6 @@ Route::post('onboarding/timezone', StoreTimezoneController::class);
 
 /* Team */
 Route::get('team', ShowTeamController::class)->name('team');
-
-Route::patch('team/update-name', UpdateTeamNameController::class)->name('team.update.name');
 
 Route::post('team/invite', InviteUserController::class)->name('team.invite');
 

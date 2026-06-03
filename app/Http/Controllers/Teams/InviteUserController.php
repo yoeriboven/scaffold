@@ -6,14 +6,13 @@ namespace App\Http\Controllers\Teams;
 
 use App\Domains\Teams\Enum\TeamPermission;
 use App\Domains\Teams\Mail\InviteUserMail;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 
-class InviteUserController extends Controller
+class InviteUserController
 {
-    public function handle(Request $request)
+    public function __invoke(Request $request)
     {
         abort_unless(
             auth()->user()->hasTeamPermissionTo(TeamPermission::MANAGE_TEAM),
@@ -40,7 +39,7 @@ class InviteUserController extends Controller
             strtotime('1 day', 0)
         );
 
-//        toast()->success(sprintf('%s %s', trans('Invitation sent to'), $request->email));
+        //        toast()->success(sprintf('%s %s', trans('Invitation sent to'), $request->email));
 
         return to_route('team');
     }

@@ -6,12 +6,11 @@ namespace App\Http\Controllers\Teams;
 
 use App\Domains\Teams\Enum\TeamRole;
 use App\Domains\Teams\Models\Invitation;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
-class AcceptInvitationController extends Controller
+class AcceptInvitationController
 {
     public function show(Invitation $invitation)
     {

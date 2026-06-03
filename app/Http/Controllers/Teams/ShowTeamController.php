@@ -7,21 +7,20 @@ namespace App\Http\Controllers\Teams;
 use App\Domains\Teams\Enum\TeamPermission;
 use App\Domains\Teams\Enum\TeamRole;
 use App\Domains\Teams\Models\Invitation;
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ShowTeamController extends Controller
+class ShowTeamController
 {
-    public function handle(): Response
+    public function __invoke(): Response
     {
         abort_unless(
             auth()->user()->hasTeamPermissionTo(TeamPermission::MANAGE_TEAM),
             403
         );
 
-        return Inertia::render('Team', [
+        return Inertia::render('Teams/Index', [
             'team' => [
                 'members' => currentTeam()
                     ->users()
