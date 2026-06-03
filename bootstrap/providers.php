@@ -12,4 +12,5 @@ return [
     HealthServiceProvider::class,
     HorizonServiceProvider::class,
     NightwatchServiceProvider::class,
+    App\Providers\MacroServiceProvider::class,
 ];

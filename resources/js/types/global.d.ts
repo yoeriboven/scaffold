@@ -31,3 +31,28 @@ declare module 'vue' {
         $headManager: ReturnType<typeof createHeadManager>;
     }
 }
+
+// Cloudflare Turnstile injects `turnstile` and the `onload` callback onto window...
+interface TurnstileRenderOptions {
+    sitekey: string;
+    callback?: (token: string) => void;
+    'expired-callback'?: () => void;
+    'error-callback'?: () => void;
+    theme?: 'light' | 'dark' | 'auto';
+    size?: 'normal' | 'compact';
+    action?: string;
+}
+
+interface Turnstile {
+    render: (container: string | HTMLElement, options: TurnstileRenderOptions) => string;
+    reset: (widgetId?: string) => void;
+    remove: (widgetId?: string) => void;
+    getResponse: (widgetId?: string) => string | undefined;
+}
+
+declare global {
+    interface Window {
+        turnstile: Turnstile;
+        onTurnstileLoad?: () => void;
+    }
+}
