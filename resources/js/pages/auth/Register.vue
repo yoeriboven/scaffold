@@ -34,7 +34,6 @@ initializeTurnstile();
     <Head title="Register" />
 
     <Form
-        ref="formRef"
         v-bind="store.form()"
         :reset-on-success="['password', 'password_confirmation']"
         v-slot="{ errors, processing }"
