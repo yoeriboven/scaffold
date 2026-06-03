@@ -1,6 +1,9 @@
 <?php
 
 use App\Enums\Queue;
+use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 return [
     /*
@@ -24,13 +27,13 @@ return [
          * The model you want to use as a MonitoredScheduledTask model needs to extend the
          * `Spatie\ScheduleMonitor\Models\MonitoredScheduledTask` Model.
          */
-        'monitored_scheduled_task' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTask::class,
+        'monitored_scheduled_task' => MonitoredScheduledTask::class,
 
         /*
          * The model you want to use as a MonitoredScheduledTaskLogItem model needs to extend the
          * `Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem` Model.
          */
-        'monitored_scheduled_log_item' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem::class,
+        'monitored_scheduled_log_item' => MonitoredScheduledTaskLogItem::class,
     ],
 
     /*
@@ -63,7 +66,7 @@ return [
         /*
          * The job class that will be dispatched to ping Oh Dear.
          */
-        'ping_oh_dear_job' => Spatie\ScheduleMonitor\Jobs\PingOhDearJob::class,
+        'ping_oh_dear_job' => PingOhDearJob::class,
 
         /*
          * `PingOhDearJob`s will automatically be skipped if they've been queued for

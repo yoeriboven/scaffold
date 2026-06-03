@@ -14,4 +14,3 @@ enum Queue: string
 
     case Monitoring = 'monitoring';
 }
-

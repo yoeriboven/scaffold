@@ -3,7 +3,6 @@
 use App\Http\Middleware\ConfigureNightwatchSampling;
 use App\Http\Middleware\EnsureUserHasTimezone;
 use App\Http\Middleware\HandleAppearance;
-use App\Http\Middleware\HandleFrontInertiaRequests;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;

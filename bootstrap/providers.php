@@ -4,6 +4,7 @@ use App\Providers\AppServiceProvider;
 use App\Providers\FortifyServiceProvider;
 use App\Providers\HealthServiceProvider;
 use App\Providers\HorizonServiceProvider;
+use App\Providers\MacroServiceProvider;
 use App\Providers\NightwatchServiceProvider;
 
 return [
@@ -12,5 +13,5 @@ return [
     HealthServiceProvider::class,
     HorizonServiceProvider::class,
     NightwatchServiceProvider::class,
-    App\Providers\MacroServiceProvider::class,
+    MacroServiceProvider::class,
 ];
