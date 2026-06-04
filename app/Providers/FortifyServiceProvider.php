@@ -7,14 +7,20 @@ namespace App\Providers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
+use Laravel\Fortify\Contracts\TwoFactorConfirmedResponse;
+use Laravel\Fortify\Contracts\TwoFactorDisabledResponse;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Http\Responses\TwoFactorConfirmedResponse as BaseTwoFactorConfirmedResponse;
+use Laravel\Fortify\Http\Responses\TwoFactorDisabledResponse as BaseTwoFactorDisabledResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -23,7 +29,8 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->registerTwoFactorConfirmedResponse();
+        $this->registerTwoFactorDisabledResponse();
     }
 
     /**
@@ -75,7 +82,6 @@ class FortifyServiceProvider extends ServiceProvider
         ]));
 
         Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
-
     }
 
     /**
@@ -92,6 +98,35 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
+    }
 
+    private function registerTwoFactorConfirmedResponse(): void
+    {
+        $this->app->instance(TwoFactorConfirmedResponse::class, new class extends BaseTwoFactorConfirmedResponse
+        {
+            public function toResponse($request)
+            {
+                if (! $request->wantsJson()) {
+                    toast()->success(trans('Two-factor authentication now enabled'));
+                }
+
+                return parent::toResponse($request);
+            }
+        });
+    }
+
+    private function registerTwoFactorDisabledResponse(): void
+    {
+        $this->app->instance(TwoFactorDisabledResponse::class, new class extends BaseTwoFactorDisabledResponse
+        {
+            public function toResponse($request)
+            {
+                if (! $request->wantsJson()) {
+                    toast()->success(trans('Disabled two-factor authentication'));
+                }
+
+                return parent::toResponse($request);
+            }
+        });
     }
 }
