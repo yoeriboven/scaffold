@@ -8,6 +8,7 @@ defineOptions({
     layout: [
         AppLayout,
         {
+            title: 'Dashboard',
             breadcrumbs: [
                 {
                     title: 'Dashboard',

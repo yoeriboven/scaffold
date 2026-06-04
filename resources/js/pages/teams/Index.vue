@@ -27,6 +27,7 @@ defineOptions({
     layout: [
         AppLayout,
         {
+            title: 'Team',
             breadcrumbs: [
                 {
                     title: 'Team',
