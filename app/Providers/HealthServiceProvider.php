@@ -43,7 +43,7 @@ class HealthServiceProvider extends ServiceProvider
                 ->numberOfBackups(min: 5, max: 100)
                 ->youngestBackShouldHaveBeenMadeBefore(now()->subDay())
                 // Gradually increase this number until it is the desired value
-                ->oldestBackShouldHaveBeenMadeAfter(now()->subMonth())
+                ->oldestBackShouldHaveBeenMadeAfter(now()->subDay())
                 ->daily(),
 
             BackupsCheck::new()
@@ -53,7 +53,7 @@ class HealthServiceProvider extends ServiceProvider
                 ->numberOfBackups(min: 5, max: 100)
                 ->youngestBackShouldHaveBeenMadeBefore(now()->subDay())
                 // Gradually increase this number until it is the desired value
-                ->oldestBackShouldHaveBeenMadeAfter(now()->subMonth())
+                ->oldestBackShouldHaveBeenMadeAfter(now()->subDay())
                 ->daily(),
 
             BackupsCheck::new()
@@ -63,7 +63,7 @@ class HealthServiceProvider extends ServiceProvider
                 ->numberOfBackups(min: 5, max: 100)
                 ->youngestBackShouldHaveBeenMadeBefore(now()->subDay())
                 // Gradually increase this number until it is the desired value
-                ->oldestBackShouldHaveBeenMadeAfter(now()->subMonth())
+                ->oldestBackShouldHaveBeenMadeAfter(now()->subDay())
                 ->daily(),
 
             CacheCheck::new(),
