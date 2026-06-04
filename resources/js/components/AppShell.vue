@@ -9,7 +9,6 @@ type Props = {
 withDefaults(defineProps<Props>(), {
     variant: 'sidebar',
 });
-
 </script>
 
 <template>

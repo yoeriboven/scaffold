@@ -3,13 +3,13 @@ import { Form, Head } from '@inertiajs/vue3';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
-import type { Props as ManageTwoFactorProps } from '@/pages/settings/components/ManageTwoFactor.vue';
-import ManageTwoFactor from '@/pages/settings/components/ManageTwoFactor.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import ManageTwoFactor from '@/pages/settings/components/ManageTwoFactor.vue';
+import type { Props as ManageTwoFactorProps } from '@/pages/settings/components/ManageTwoFactor.vue';
 import { edit } from '@/routes/security';
 
 type Props = {

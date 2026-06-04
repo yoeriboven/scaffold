@@ -45,7 +45,6 @@ class InviteUserController
             toast()->success(sprintf('%s %s', trans('Resent invitation to'), $request->email));
         }
 
-
         return to_action(ShowTeamController::class);
     }
 
