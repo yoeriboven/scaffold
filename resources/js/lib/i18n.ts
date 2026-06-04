@@ -3,27 +3,15 @@ import type { App, Plugin } from 'vue';
 
 const defaultLanguage = 'en';
 
+// Resolved once, statically, by Vite at build time. Sync resolution works for
+// both the client and the SSR build, and keeps lang files in a single chunk.
+const langs = import.meta.glob<{ default: Record<string, string> }>('../../../lang/*.json', { eager: true });
+
 export const i18nVue: Plugin = {
     install(app: App, ssr: boolean) {
-        if (ssr) {
-            app.use(i18nVuePackage, {
-                lang: defaultLanguage,
-                resolve: (lang: string) => {
-                    const langs = import.meta.glob('../../../lang/*.json', { eager: true });
-
-                    return langs[`../../../lang/${lang}.json`].default;
-                },
-            });
-
-            return
-        }
-
         app.use(i18nVuePackage, {
-            resolve: async (lang: string) => {
-                const langs = import.meta.glob('../../../lang/*.json');
-
-                return await langs[`../../../lang/${lang}.json`]();
-            },
+            lang: ssr ? defaultLanguage : undefined,
+            resolve: (lang: string) => langs[`../../../lang/${lang}.json`]?.default,
         });
     },
 };

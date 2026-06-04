@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Fortify;
 
+use App\Enums\Locale;
 use App\Models\User;
 use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Validator;
@@ -31,6 +32,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            'locale' => Locale::default(),
         ]);
     }
 }

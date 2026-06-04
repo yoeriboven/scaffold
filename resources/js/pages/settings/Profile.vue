@@ -47,7 +47,7 @@ const user = computed(() => page.props.auth.user);
         <Form v-bind="ProfileController.update.form()" class="space-y-6" v-slot="{ errors, processing }">
             <div class="grid gap-2">
                 <Label for="name">Name</Label>
-                <Input id="name" class="mt-1 block w-full" name="name" :default-value="user.name" required autocomplete="name" placeholder="Full name" />
+                <Input id="name" class="mt-1 block w-full" name="name" :default-value="user.name" required data-1p-ignore placeholder="Full name" />
                 <InputError class="mt-2" :message="errors.name" />
             </div>
 
