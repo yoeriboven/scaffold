@@ -27,8 +27,7 @@ defineOptions({
     <Form v-bind="AcceptInvitationController.store.form(props.invitationId)" v-slot="{ processing }" class="flex flex-col gap-6">
         <p class="text-center text-sm text-muted-foreground">
             You have been invited to join
-            <span class="font-medium text-foreground">{{ props.teamName }}</span
-            >.
+            <span class="font-medium text-foreground">{{ props.teamName }}</span>.
         </p>
 
         <Button type="submit" class="w-full" :disabled="processing">
