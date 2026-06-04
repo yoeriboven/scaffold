@@ -37,8 +37,6 @@ return Application::configure(basePath: dirname(__DIR__))
         base_path('routes/console/schedule.php'),
     ])
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->encryptCookies(except: ['sidebar_state']);
-
         $middleware->group('app', [
             RedirectToPendingInvitation::class,
             EnsureUserHasTimezone::class,
