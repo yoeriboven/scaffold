@@ -3,10 +3,10 @@ import { Form } from '@inertiajs/vue3';
 import { ShieldCheck } from '@lucide/vue';
 import { onUnmounted, ref } from 'vue';
 import Heading from '@/components/Heading.vue';
-import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
-import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
+import TwoFactorRecoveryCodes from '@/pages/settings/components/TwoFactorRecoveryCodes.vue';
+import TwoFactorSetupModal from '@/pages/settings/components/TwoFactorSetupModal.vue';
 import { disable, enable } from '@/routes/two-factor';
 
 export type Props = {

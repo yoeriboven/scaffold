@@ -19,6 +19,7 @@ defineOptions({
         [
             AppLayout,
             {
+                title: 'Settings',
                 breadcrumbs: [
                     {
                         title: 'Profile settings',

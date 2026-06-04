@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import ShowTeamController from '@/actions/App/Http/Controllers/Teams/ShowTeamController';
-import InviteTeamMemberDialog from '@/components/InviteTeamMemberDialog.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
+import InviteTeamMemberDialog from '@/pages/teams/components/InviteTeamMemberDialog.vue';
 
 type Member = {
     name: string;
