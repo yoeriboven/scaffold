@@ -27,6 +27,9 @@ pest()->extend(TestCase::class)
 pest()->extend(TestCase::class)
     ->in('ArchitectureTest.php');
 
+pest()->extend(TestCase::class)
+    ->in('InfrastructureTest.php');
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
