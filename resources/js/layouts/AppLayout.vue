@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Toaster } from 'vue-sonner';
-import 'vue-sonner/style.css';
 
-const { breadcrumbs = [] } = defineProps<{
+const { breadcrumbs = [], title } = defineProps<{
     breadcrumbs?: BreadcrumbItem[];
+    title?: string;
 }>();
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout :breadcrumbs="breadcrumbs" :title="title">
         <slot />
-
-        <Toaster position="top-center" rich-colors />
     </AppLayout>
 </template>

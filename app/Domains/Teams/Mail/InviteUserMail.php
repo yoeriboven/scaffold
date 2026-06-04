@@ -40,7 +40,7 @@ class InviteUserMail extends Mailable
             markdown: 'emails.invitation',
             with: [
                 'teamName' => $this->invitation->team->name,
-                'url' => route('invitation.accept.show', $this->invitation),
+                'url' => $this->invitation->url(),
             ]
         );
     }

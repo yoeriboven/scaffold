@@ -1,13 +1,21 @@
 <x-mail::message>
-# @lang('You have been invited to') {{ $teamName }}
+# {{ trans('You have been invited!') }}
 
-@lang('Join the team by clicking on the button below or by copying the link into your browser.')
+{{ trans('You have been invited to join :team on :app.', ['team' => $teamName, 'app' => config('app.name')]) }}
+
+{{ trans('Click the button below to accept the invitation and get started.') }}
 
 <x-mail::button :url="$url">
-    @lang('Join :team', ['team' => $teamName])
+{{ trans('Accept Invitation') }}
 </x-mail::button>
 
-[{{ $url }}]({{ $url }})
+{{ trans("If you did not expect to receive this invitation, you can safely ignore this email.") }}
 
+{{ trans('Thanks,') }}<br>
 {{ config('app.name') }}
+
+<x-slot:subcopy>
+{{ trans("If you're having trouble clicking the \":actionText\" button, copy and paste the URL below into your web browser:", ['actionText' => trans('Accept Invitation')]) }}
+<span class="break-all">[{{ $url }}]({{ $url }})</span>
+</x-slot:subcopy>
 </x-mail::message>

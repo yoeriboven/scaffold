@@ -75,7 +75,7 @@ return [
     |
     */
 
-    'home' => '/app/',
+    'home' => '/app',
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +103,7 @@ return [
     |
     */
 
-    'middleware' => ['web', 'guest'],
+    'middleware' => ['web'],
 
     /*
     |--------------------------------------------------------------------------
@@ -151,7 +151,7 @@ return [
         Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,
-            'confirmPassword' => true,
+            'confirmPassword' => false,
             // 'window' => 0
         ]),
     ],

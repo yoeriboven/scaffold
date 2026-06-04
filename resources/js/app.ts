@@ -1,33 +1,18 @@
-import toast from '@/plugins/toast';
 import { createInertiaApp } from '@inertiajs/vue3';
-import { i18nVue } from 'laravel-vue-i18n';
-import { ZiggyVue } from 'ziggy-js';
-import { initializeTheme } from '@/composables/useAppearance';
+import { initializeFlashToast } from '@/lib/flashToast';
+import { i18nVue } from '@/lib/i18n';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
-    withApp(app) {
-        app.use(toast)
-            .use(ZiggyVue)
-            .use(i18nVue, {
-                lang:
-                    window.document.documentElement
-                        .getAttribute('lang')
-                        ?.replace('-', '_') ?? 'en_US',
-                fallbackLang: 'en_US',
-                resolve: async (lang: string) => {
-                    const langs = import.meta.glob('/lang/*.json');
-
-                    return await langs[`/lang/${lang}.json`]();
-                },
-            });
-    },
     progress: {
         color: '#4B5563',
     },
+    withApp(app, { ssr }) {
+        app.use(i18nVue, ssr);
+    },
 });
 
-// This will set light / dark mode on page load...
-initializeTheme();
+// This will listen for flash toast data from the server...
+initializeFlashToast();

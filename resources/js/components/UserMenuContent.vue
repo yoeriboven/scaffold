@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import UserInfo from '@/components/UserInfo.vue';
-import {
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings } from 'lucide-vue-next';
+import { LogOut, Settings } from '@lucide/vue';
+import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import UserInfo from '@/components/UserInfo.vue';
+import { logout } from '@/routes';
+import { edit } from '@/routes/profile';
+import type { User } from '@/types';
 
-interface Props {
+type Props = {
     user: User;
-}
+};
 
 const handleLogout = () => {
-    router.post(route('logout'));
+    router.flushAll();
 };
 
 defineProps<Props>();
@@ -30,28 +27,17 @@ defineProps<Props>();
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
-            <Link
-                class="block w-full cursor-pointer"
-                :href="route('profile.edit')"
-                prefetch
-            >
+            <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
                 <Settings class="mr-2 h-4 w-4" />
-                {{ $t('Settings') }}
+                Settings
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
     <DropdownMenuSeparator />
     <DropdownMenuItem :as-child="true">
-        <Link
-            class="block w-full cursor-pointer"
-            :href="route('logout')"
-            method="post"
-            @click="handleLogout"
-            as="button"
-            data-test="logout-button"
-        >
+        <Link class="block w-full cursor-pointer" :href="logout()" @click="handleLogout" as="button" data-test="logout-button">
             <LogOut class="mr-2 h-4 w-4" />
-            {{ $t('Log out') }}
+            Log out
         </Link>
     </DropdownMenuItem>
 </template>

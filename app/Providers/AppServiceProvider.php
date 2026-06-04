@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Domains\Teams\Models\Team;
 use Carbon\CarbonImmutable;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\MissingAttributeException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\LazyLoadingViolationException;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,10 +27,9 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDates();
         $this->configureCommands();
         $this->configureURL();
-        $this->configureAuthentication();
-        $this->configureFactories();
         $this->configureEmailRecipientOnLocal();
         $this->configureRateLimiting();
+        $this->configurePasswordRules();
     }
 
     private function configureEloquent(): void
@@ -58,7 +54,6 @@ class AppServiceProvider extends ServiceProvider
     private function configureMorphMap(): void
     {
         Relation::enforceMorphMap([
-            'team' => Team::class,
         ]);
     }
 
@@ -82,20 +77,6 @@ class AppServiceProvider extends ServiceProvider
         URL::forceScheme('https');
     }
 
-    private function configureAuthentication(): void
-    {
-        //
-    }
-
-    // Check Factory::resolveFactoryName() to see why we need this.
-    // I think because we use Domains namespace instead of App
-    private function configureFactories(): void
-    {
-        Factory::guessFactoryNamesUsing(function (string $modelName) {
-            return sprintf('Database\\Factories\\%sFactory', Str::afterLast($modelName, '\\'));
-        });
-    }
-
     private function configureEmailRecipientOnLocal(): void
     {
         if (app()->isLocal()) {
@@ -103,8 +84,13 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
-    private function configureRateLimiting(): void
+    private function configureRateLimiting(): void {}
+
+    private function configurePasswordRules(): void
     {
-        //
+        Password::defaults(fn (): ?Password => app()->isProduction()
+            ? Password::min(8)->uncompromised()
+            : null,
+        );
     }
 }

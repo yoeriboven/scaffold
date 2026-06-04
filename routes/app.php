@@ -2,60 +2,47 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\App\DashboardController;
-use App\Http\Controllers\App\Onboarding\CreateTeamController;
-use App\Http\Controllers\App\Onboarding\StoreTeamController;
-use App\Http\Controllers\App\Settings\PasswordController;
-use App\Http\Controllers\App\Settings\ProfileController;
-use App\Http\Controllers\App\Settings\TwoFactorAuthenticationController;
-use App\Http\Controllers\App\Teams\AcceptInvitationController;
-use App\Http\Controllers\App\Teams\InviteUserController;
-use App\Http\Controllers\App\Teams\RemoveMemberController;
-use App\Http\Controllers\App\Teams\RevokeInvitationController;
-use App\Http\Controllers\App\Teams\ShowInvitationController;
-use App\Http\Controllers\App\Teams\ShowTeamController;
+use App\Http\Controllers\Onboarding\SelectTimezoneController;
+use App\Http\Controllers\Onboarding\StoreTimezoneController;
+use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\SecurityController;
+use App\Http\Controllers\Teams\AcceptInvitationController;
+use App\Http\Controllers\Teams\InviteUserController;
+use App\Http\Controllers\Teams\ShowTeamController;
 use App\Http\Middleware\AddInvitationToSession;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', DashboardController::class)->name('dashboard');
+Route::inertia('', 'Dashboard')->name('dashboard');
 
-/** Onboarding */
-Route::get('onboarding/team', CreateTeamController::class)->name('onboarding.team');
-Route::post('onboarding/team', StoreTeamController::class)->name('onboarding.team.store');
+/* Onboarding */
+Route::get('onboarding/timezone', SelectTimezoneController::class);
+Route::post('onboarding/timezone', StoreTimezoneController::class);
 
-/** Teams */
-Route::get('team', ShowTeamController::class)->name('team');
+/* Team */
+Route::get('team', ShowTeamController::class);
 
-Route::post('team/invite', InviteUserController::class)->name('team.invite');
+Route::post('team/invite', InviteUserController::class);
 
-Route::get('team/invite/{invitation}', ShowInvitationController::class)
-    ->middleware(AddInvitationToSession::class)
+// Link user clicks to join the team
+Route::middleware([AddInvitationToSession::class])
+    ->get('team/invite/{invitation}', [AcceptInvitationController::class, 'show'])
     ->name('invitation.accept.show');
 
-Route::post('team/invite/{invitation}', AcceptInvitationController::class)
+// URL of the form to accept the invitation
+Route::post('team/invite/{invitation}', [AcceptInvitationController::class, 'store'])
     ->name('invitation.accept.store');
 
-Route::delete('team/invitation/{invitation}', RevokeInvitationController::class)
-    ->name('team.invitation.revoke');
-
-Route::delete('team/member/{user}', RemoveMemberController::class)
-    ->name('team.member.remove');
-
-/** Settings */
+/* Settings */
 Route::redirect('settings', '/settings/profile');
 
 Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+
 Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-Route::get('settings/password', [PasswordController::class, 'edit'])->name('user-password.edit');
-Route::put('settings/password', [PasswordController::class, 'update'])
+Route::get('settings/security', [SecurityController::class, 'edit'])
+    ->name('security.edit');
+
+Route::put('settings/password', [SecurityController::class, 'update'])
     ->middleware('throttle:6,1')
     ->name('user-password.update');
-
-Route::get('settings/appearance', function () {
-    return Inertia::render('settings/Appearance');
-})->name('appearance.edit');
-
-Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])->name('two-factor.show');

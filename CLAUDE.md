@@ -1,118 +1,138 @@
 <laravel-boost-guidelines>
-=== .ai/ai rules ===
-
-- When you present a plan mainly show what it will mean to the user. Like UI/UX decisions. For the technial
-  implementation a short summary is enough.
-- In plan mode always ask questions until you are sure what I want.
-
 === .ai/coding rules ===
 
-New text needs to be translated in all languages available as json in lang/. Use the $t helper in Vue templates. Use
-`trans` in scripts by importing it: `import { trans } from 'laravel-vue-i18n';`
-Use the english translation as the key. There is no need to add the translation to the en_US.json as the key and value
-will be the same.
+New text needs to be translated in all languages available as json in lang/. Use the $t helper in Vue templates. Use `trans` in scripts by importing it: `import { trans } from 'laravel-vue-i18n';`
+Use the english translation as the key. There is no need to add the translation to the en_US.json as the key and value will be the same.
 When translating take the context of the app and the page in account. Never add new keys to lang/en_US.json
+Always check if the key already exists to avoid duplicates.
 
 ## Vue
 
-- Always place the <template> above the <script> section
+- Always place the <script> above the <template> section
 - Always use defineModel() instead of creating a prop modelValue and defining an emit
 - To import other components always use the absolute path starting with `@` instead of a relative path.
-- Use Shadcn components when necessary. The shadcn mcp server is available.
-- When importing multiple components from the same file, write it all on one line.
-
-So don't do:
-
-```vue
-import {
-Table,
-TableBody,
-TableCell,
-TableHead,
-TableHeader,
-TableRow,
-} from '@/components/ui/table';
-```
-
-but do
-
-```vue
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-```
-
-- Turn the data you pass from the controller to the page into a ts definition. This can be done inline for
-  `defineProps`. No need for separate declarations.
-
-## Inertia
-
-- Always use the <Form> component instead of the form helper.
 
 ## PHP
+
+- New controllers need to extend App\Http\Controller and use the `handle` method and `authorize` if necessary. Never use `__invoke()`.
 
 ## Laravel
 
 - Don't use `$fillable` on the models. We are unguarded by default.
 - If a migration was added, run `php artisan migrate`.
-
-### Eloquent
-
-- Use relationships on the model rather than doing `->where('model_id', $someId)`
-- When a datetime column is added to the database it needs to be cast to `datetime`
-
-### Spatie Data
-
-- Don't use methods if a an attribute can also be used. Set defaults in the constructor definition (not the body if
-  possible)
-
-### Jobs
-
-- Always set a timeout. If the job calls an external endpoint, also set a timeout on the http client. This number should
-  be smaller than the timeout on the job. Make sure the `timeout` in `config/horizon.php` is greater than the timeout on
-  the job. Make sure the redis retry_after in `config/queue.php` is larger than the value in the horizon config.
-
-### Routing
-
-- There is no need to explicitly specify the `public_id` column for route model binding. {customer:public_id} is
-  redundant
-  because we always want to use the `HasPublicId` trait on models that can be used in routes.
+- To redirect on the php side, use actions instead of route name. E.g. `to_action` instead of `to_route`.
 
 ## Architecture
 
-- If a domain gets big and has files spread across the app folder, move it to the Domain namespace. See
-  app/Domains/Teams as an example.
+- On external requests where others can see the ids of models (i.e. urls, external services, etc) always use the `public_id` instead of the `id`. `id` is for internal use only.
+
+### Controllers
+
+- If not explicitly said otherwise, use invokable controllers.
+
+### Localization
+
+- Use `__()` in `.blade.php` files.
+- Use `trans()` in normal `.php` files. Not `__()`.
+
+### Vue Pages
+
+- They should also be in the same subfolder. E.g. A controller is in app/Http/Controllers/Studio/IndexRedesignsController.php then the page must be in resources/js/Pages/Studio/IndexRedesigns.vue
+- Always use invokable controllers from wayfinder.
+
+### Migrations
+
+- Don't add the `down` method.
+
+### Facades
+
+- Don't add the methods the facade can call to a docblock on the class.
+
+### Jobs
+
+- Always set a timeout. If the job calls an external endpoint, also set a timeout on the http client. This number should be smaller than the timeout on the job. Make sure the `timeout` in `config/horizon.php` is greater than the timeout on the job. Make sure the redis retry_after in `config/queue.php` is larger than the value in the horizon config.
+
+### Routes
+
+- Route model bindings should be declared in RouteServiceProvider.
+
+## Billing
+
+- If a user subscribes to a product, create a new subscription and redirect them to checkout. If a user already has a subscription, add the new product to the current subscription.
+
+## Tests
+
+- There is no need to write php tests
+- There is no need to run php tests
 
 ## Misc
 
 - When adding new env variables to config files, also add them to .env and .env.example with an empty value
-- Never do `$team = currentTeam();`. Just use `currentTeam()` directly.
-
-## CSS
-
-- Always use `shrink-0` instead of `flex-shrink-0`. They do the same.
-
-## CLI
-
-Run `npx tsc --noEmit` to make sure there are no ts errors.
-
-## Libraries
-
-- Reka UI (powers Shadcn Vue): https://reka-ui.com/llms.txt
-    - The Reka UI Checkbox uses v-model (which binds to modelValue), not :checked and @update:checked.
-
-## Domain knowledge
-
-- Most models need to be attached to the Team instead of the User
+- Dont run `php artisan pint`. It just takes time. 
+- When a you add spatie media library to a model, make sure to add it to the morphmap in app/Providers/AppServiceProvider.php
 
 ## Playwright testing
 
-- When it asks to login use:
-    - Email: yoeri@yoeri.me
-    - Password: password
+- You can login with `yoeri@yoeri.me` and `password`
 
-=== .ai/scaffold rules ===
+## CSS / Tailwind
 
-This starter kit has it's own team implementation. It was added before the upstream starter kit got team functionality.
-When pulling in changes from upstream dont use the `team` branch. Use `main` instead.
+- Always use `shrink-0` instead of `flex-shrink-0`. They do the same.
+
+=== .ai/design-picker rules ===
+
+# Design variant picker
+
+A vanilla JS dev tool that lets us preview multiple design options side-by-side on the same page.
+
+## When to use it
+
+- The user asks for multiple variants/options of a UI element (e.g. "give me 5 designs for X", "show a few options for Y", "create variants").
+- The user is in a design exploration phase and wants to compare options live in the browser before picking a winner.
+
+Do NOT use it for:
+- A single design — just build the thing.
+- A/B tests in production — this is a local-only preview tool.
+
+## How to use it
+
+### Loading the script
+
+Add the following script tag to the page where the variants will be previewed (e.g. in `resources/views/layouts/app.blade.php`, ideally guarded by `@env('local')` so it only loads in local development):
+
+```html
+<script src="https://gistcdn.githack.com/yoeriboven/60d47eb9f44ce13847aaa04873ba05d9/raw/8df832d71a1158d4507adb48928f0a92a84c5edb/variant-picker.js"></script>
+```
+
+### Rendering variants
+
+For each variant, render the markup directly in the Vue/Blade template with a `data-variant="[number]-kebab-case-name"` attribute. Render all variants at once — no prop, no v-if, no JS registration. The picker scans the DOM, hides all but the selected variant, and renders a floating bar (top-right) with prev/next arrows that cycles through them.
+
+```vue
+<button data-variant="1-header-link" class="...">+ Add</button>
+<button data-variant="2-header-button" class="...">+ Add showing</button>
+<button data-variant="3-dashed-footer" class="...">+ Add showing</button>
+```
+
+### Naming
+
+- Use descriptive kebab-case names (`dashed-footer`, `floating-fab`, `header-button`) — they show up verbatim in the picker bar.
+- Use the same `data-variant` value on every element belonging to the same variant. If one variant needs multiple elements (e.g. an empty-state version plus an in-list version), give them all the same name.
+
+### Behaviour to know
+
+- The picker persists nothing — refresh resets to the first variant.
+- All variants live in the DOM simultaneously, hidden via `style.display: none`. Don't rely on `v-show` or `v-if` to filter them.
+- All variants should emit the same event / call the same handler — functionality stays identical, only the design changes.
+- For variants that don't render in some states (e.g. a table row that's hidden when the list is empty), render an alternative element with the same `data-variant` name in the empty state.
+
+## Cleanup
+
+Once the user picks a winning variant:
+1. Delete the losing markup.
+2. Remove the `data-variant` attribute from the winner.
+
+The picker auto-hides its bar when no `[data-variant]` elements are on the page, but the script tag itself should still be removed once exploration is done.
 
 === foundation rules ===
 
@@ -124,13 +144,14 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.4
+- php - 8.5
 - inertiajs/inertia-laravel (INERTIA_LARAVEL) - v3
 - laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v13
 - laravel/horizon (HORIZON) - v5
+- laravel/nightwatch (NIGHTWATCH) - v1
 - laravel/prompts (PROMPTS) - v0
-- tightenco/ziggy (ZIGGY) - v2
+- laravel/wayfinder (WAYFINDER) - v0
 - laravel/boost (BOOST) - v2
 - laravel/mcp (MCP) - v0
 - laravel/pail (PAIL) - v1
@@ -141,21 +162,13 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - @inertiajs/vue3 (INERTIA_VUE) - v3
 - tailwindcss (TAILWINDCSS) - v4
 - vue (VUE) - v3
+- @laravel/vite-plugin-wayfinder (WAYFINDER_VITE) - v0
 - eslint (ESLINT) - v9
 - prettier (PRETTIER) - v3
 
 ## Skills Activation
 
-This project has domain-specific skills available. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
-
-- `laravel-best-practices` — Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. This includes creating or modifying controllers, models, migrations, form requests, policies, jobs, scheduled commands, service classes, and Eloquent queries. Triggers for N+1 and query performance issues, caching strategies, authorization and security patterns, validation, error handling, queue and job configuration, route definitions, and architectural decisions. Also use for Laravel code reviews and refactoring existing Laravel code to follow best practices. Covers any task involving Laravel backend PHP code patterns.
-- `configuring-horizon` — Use this skill whenever the user mentions Horizon by name in a Laravel context. Covers the full Horizon lifecycle: installing Horizon (horizon:install, Sail setup), configuring config/horizon.php (supervisor blocks, queue assignments, balancing strategies, minProcesses/maxProcesses), fixing the dashboard (authorization via Gate::define viewHorizon, blank metrics, horizon:snapshot scheduling), and troubleshooting production issues (worker crashes, timeout chain ordering, LongWaitDetected notifications, waits config). Also covers job tagging and silencing. Do not use for generic Laravel queues without Horizon, SQS or database drivers, standalone Redis setup, Linux supervisord, Telescope, or job batching.
-- `pest-testing` — Use this skill for Pest PHP testing in Laravel projects only. Trigger whenever any test is being written, edited, fixed, or refactored — including fixing tests that broke after a code change, adding assertions, converting PHPUnit to Pest, adding datasets, and TDD workflows. Always activate when the user asks how to write something in Pest, mentions test files or directories (tests/Feature, tests/Unit, tests/Browser), or needs browser testing, smoke testing multiple pages for JS errors, or architecture tests. Covers: it()/expect() syntax, datasets, mocking, browser testing (visit/click/fill), smoke testing, arch(), Livewire component tests, RefreshDatabase, and all Pest 4 features. Do not use for factories, seeders, migrations, controllers, models, or non-test PHP code.
-- `inertia-vue-development` — Develops Inertia.js v3 Vue client-side applications. Activates when creating Vue pages, forms, or navigation; using <Link>, <Form>, useForm, useHttp, setLayoutProps, or router; working with deferred props, prefetching, optimistic updates, instant visits, or polling; or when user mentions Vue with Inertia, Vue pages, Vue forms, or Vue navigation.
-- `tailwindcss-development` — Always invoke when the user's message includes 'tailwind' in any form. Also invoke for: building responsive grid layouts (multi-column card grids, product grids), flex/grid page structures (dashboards with sidebars, fixed topbars, mobile-toggle navs), styling UI components (cards, tables, navbars, pricing sections, forms, inputs, badges), adding dark mode variants, fixing spacing or typography, and Tailwind v3/v4 work. The core use case: writing or fixing Tailwind utility classes in HTML templates (Blade, JSX, Vue). Skip for backend PHP logic, database queries, API routes, JavaScript with no HTML/CSS component, CSS file audits, build tool configuration, and vanilla CSS.
-- `fortify-development` — ACTIVATE when the user works on authentication in Laravel. This includes login, registration, password reset, email verification, two-factor authentication (2FA/TOTP/QR codes/recovery codes), profile updates, password confirmation, or any auth-related routes and controllers. Activate when the user mentions Fortify, auth, authentication, login, register, signup, forgot password, verify email, 2FA, or references app/Actions/Fortify/, CreateNewUser, UpdateUserProfileInformation, FortifyServiceProvider, config/fortify.php, or auth guards. Fortify is the frontend-agnostic authentication backend for Laravel that registers all auth routes and controllers. Also activate when building SPA or headless authentication, customizing login redirects, overriding response contracts like LoginResponse, or configuring login throttling. Do NOT activate for Laravel Passport (OAuth2 API tokens), Socialite (OAuth social login), or non-auth Laravel features.
-- `spatie-laravel-php-standards` — Apply Spatie's Laravel and PHP coding standards for any task that creates, edits, reviews, refactors, or formats Laravel/PHP code or Blade templates; use for controllers, Eloquent models, routes, config, validation, migrations, tests, and related files to align with Laravel conventions and PSR-12.
-- `debugging-output-and-previewing-html-using-ray` — Use when user says "send to Ray," "show in Ray," "debug in Ray," "log to Ray," "display in Ray," or wants to visualize data, debug output, or show diagrams in the Ray desktop application.
+This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
 
 ## Conventions
 
@@ -215,7 +228,6 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Run Artisan commands directly via the command line (e.g., `php artisan route:list`). Use `php artisan list` to discover available commands and `php artisan [command] --help` to check parameters.
 - Inspect routes with `php artisan route:list`. Filter with: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
 - Read configuration values using dot notation: `php artisan config:show app.name`, `php artisan config:show database.default`. Or read config files directly from the `config/` directory.
-- To check environment variables, read the `.env` file directly.
 
 ## Tinker
 
@@ -230,9 +242,15 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Always use curly braces for control structures, even for single-line bodies.
 - Use PHP 8 constructor property promotion: `public function __construct(public GitHub $github) { }`. Do not leave empty zero-parameter `__construct()` methods unless the constructor is private.
 - Use explicit return type declarations and type hints for all method parameters: `function isAccessible(User $user, ?string $path = null): bool`
-- Use TitleCase for Enum keys: `FavoritePerson`, `BestLake`, `Monthly`.
+- Follow existing application Enum naming conventions.
 - Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
 - Use array shape type definitions in PHPDoc blocks.
+
+=== deployments rules ===
+
+# Deployment
+
+- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
 
 === herd rules ===
 
@@ -301,6 +319,12 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
 
+=== wayfinder/core rules ===
+
+# Laravel Wayfinder
+
+Use Wayfinder to generate TypeScript functions for Laravel routes. Import from `@/actions/` (controllers) or `@/routes/` (named routes).
+
 === pint/core rules ===
 
 # Laravel Pint Code Formatter
@@ -313,6 +337,7 @@ This project has domain-specific skills available. You MUST activate the relevan
 ## Pest
 
 - This project uses Pest for testing. Create tests: `php artisan make:test --pest {name}`.
+- The `{name}` argument should not include the test suite directory. Use `php artisan make:test --pest SomeFeatureTest` instead of `php artisan make:test --pest Feature/SomeFeatureTest`.
 - Run tests: `php artisan test --compact` or filter: `php artisan test --compact --filter=testName`.
 - Do NOT delete tests without approval.
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Concerns;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -16,19 +17,21 @@ trait HasPublicId
 
     protected static function bootHasPublicId(): void
     {
-        // Tries to create uuid 3 times, write test and improve
+        // Tries to create public id 3 times; write test and improve
         static::creating(function (Model $model) {
-            $uuid = Str::uuid();
+            $id = Str::random(8);
 
-            if (static::where('public_id', $uuid)->exists()) {
-                $uuid = Str::uuid();
+            if (static::where('public_id', $id)->exists()) {
+                report(new Exception('The public id already exists.'));
 
-                if (static::where('public_id', $uuid)->exists()) {
-                    $uuid = Str::uuid();
+                $id = Str::random(8);
+
+                if (static::where('public_id', $id)->exists()) {
+                    $id = Str::random(8);
                 }
             }
 
-            $model->public_id = $uuid;
+            $model->public_id = $id;
         });
     }
 }

@@ -4,22 +4,27 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\Language;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
+    private User $admin;
+
     public function run(): void
     {
-        User::factory()->asTeamAdmin()->create([
+        $this->admin = $this->seedAdmin();
+    }
+
+    private function seedAdmin(): User
+    {
+        $admin = User::factory()->create([
             'name' => 'Yoeri Boven',
             'email' => 'yoeri@yoeri.me',
-            'language' => Language::DUTCH,
         ]);
+
+        $admin->currentTeam()->update(['name' => 'Yoeri\'s Team']);
+
+        return $admin;
     }
 }

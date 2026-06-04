@@ -2,22 +2,28 @@
     "agents": [
         "claude_code"
     ],
+    "cloud": false,
     "guidelines": true,
     "mcp": true,
-    "nightwatch_mcp": false,
+    "nightwatch": true,
     "packages": [
         "spatie/boost-spatie-guidelines",
-        "laravel/fortify",
+        "spatie/laravel-backup",
+        "barryvdh/laravel-debugbar",
         "spatie/laravel-ray"
     ],
     "sail": false,
     "skills": [
+        "fortify-development",
         "laravel-best-practices",
         "configuring-horizon",
+        "configure-nightwatch",
+        "wayfinder-development",
         "pest-testing",
         "inertia-vue-development",
         "tailwindcss-development",
-        "fortify-development",
+        "laravel-backup",
+        "debug-using-debugbar",
         "spatie-laravel-php-standards",
         "debugging-output-and-previewing-html-using-ray"
     ]

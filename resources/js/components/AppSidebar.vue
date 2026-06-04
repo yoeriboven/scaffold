@@ -1,41 +1,24 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+import { LayoutGrid, Users } from '@lucide/vue';
+import ShowTeamController from '@/actions/App/Http/Controllers/Teams/ShowTeamController';
+import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { useActiveUrl } from '@/composables/useActiveUrl';
-import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Users } from 'lucide-vue-next';
-import AppLogo from './AppLogo.vue';
-
-const { urlIsActive } = useActiveUrl();
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { useCurrentUrl } from '@/composables/useCurrentUrl';
+import { dashboard } from '@/routes';
+import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: route('dashboard'),
+        href: dashboard(),
         icon: LayoutGrid,
     },
 ];
 
-const footerNavItems: NavItem[] = usePage().props.auth.user.permissions
-    .manage_team
-    ? [
-          {
-              title: 'Team',
-              href: route('team'),
-              icon: Users,
-          },
-      ]
-    : [];
+const { isCurrentUrl } = useCurrentUrl();
 </script>
 
 <template>
@@ -44,7 +27,7 @@ const footerNavItems: NavItem[] = usePage().props.auth.user.permissions
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
+                        <Link :href="dashboard()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
@@ -58,18 +41,11 @@ const footerNavItems: NavItem[] = usePage().props.auth.user.permissions
 
         <SidebarFooter>
             <SidebarMenu>
-                <SidebarMenuItem
-                    v-for="item in footerNavItems"
-                    :key="item.title"
-                >
-                    <SidebarMenuButton
-                        as-child
-                        :is-active="urlIsActive(item.href)"
-                        :tooltip="item.title"
-                    >
-                        <Link :href="item.href">
-                            <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
+                <SidebarMenuItem>
+                    <SidebarMenuButton as-child :is-active="isCurrentUrl(ShowTeamController())" tooltip="Team">
+                        <Link :href="ShowTeamController()">
+                            <Users />
+                            <span>Team</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

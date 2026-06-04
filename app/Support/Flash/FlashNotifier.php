@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Support\Flash;
 
+use Inertia\Inertia;
+
 class FlashNotifier
 {
     public function success(string $message): void
@@ -18,7 +20,7 @@ class FlashNotifier
 
     protected function flash(string $message, FlashLevel $level): void
     {
-        session()->flash('toast', [
+        Inertia::flash('toast', [
             'message' => $message,
             'level' => $level->value,
         ]);
