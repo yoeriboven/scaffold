@@ -91,12 +91,7 @@ class AppServiceProvider extends ServiceProvider
     private function configurePasswordRules(): void
     {
         Password::defaults(fn (): ?Password => app()->isProduction()
-            ? Password::min(12)
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-                ->uncompromised()
+            ? Password::min(8)->uncompromised()
             : null,
         );
     }
