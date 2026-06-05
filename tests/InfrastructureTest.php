@@ -136,4 +136,53 @@ describe('horizon service provider', function () {
             );
         }
     });
+
+    it('builds exactly one supervisor per queue enum case', function () {
+        $expected = array_map(
+            fn (Queue $queue): string => "supervisor-{$queue->value}",
+            Queue::cases(),
+        );
+
+        expect(array_keys(config('horizon.environments.*')))
+            ->toEqualCanonicalizing($expected);
+    });
+});
+
+describe('horizon worker invariants', function () {
+    it('points every supervisor at a configured queue connection', function () {
+        $connections = array_keys(config('queue.connections'));
+
+        foreach (config('horizon.environments.*') as $name => $supervisor) {
+            $this->assertContains(
+                $supervisor['connection'],
+                $connections,
+                "Supervisor [{$name}] uses an unknown queue connection [{$supervisor['connection']}]."
+            );
+        }
+    });
+
+    it('keeps each connection retry_after safely above the worker timeout', function () {
+        foreach (config('horizon.environments.*') as $name => $supervisor) {
+            $retryAfter = config("queue.connections.{$supervisor['connection']}.retry_after");
+
+            // The queue must not reassign a job to another worker until the
+            // first worker's timeout has passed, or the job runs twice. The
+            // timeout-chain docblock in config/horizon.php asks for a 10s margin.
+            $this->assertGreaterThanOrEqual(
+                $supervisor['timeout'] + 10,
+                $retryAfter,
+                "Jobs on supervisor [{$name}] can run twice: retry_after ({$retryAfter}) must stay at least 10s above its timeout ({$supervisor['timeout']})."
+            );
+        }
+    });
+
+    it('recycles workers only between jobs (maxTime exceeds every timeout)', function () {
+        foreach (config('horizon.environments.*') as $name => $supervisor) {
+            $this->assertGreaterThan(
+                $supervisor['timeout'],
+                $supervisor['maxTime'],
+                "Supervisor [{$name}] may recycle mid-job: maxTime ({$supervisor['maxTime']}) must exceed its timeout ({$supervisor['timeout']})."
+            );
+        }
+    });
 });

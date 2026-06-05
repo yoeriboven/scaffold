@@ -19,7 +19,6 @@ class HorizonServiceProvider extends ServiceProvider
     private function configureHorizon(): void
     {
         config(['horizon' => new HorizonConfig()->toArray()]);
-        ray(config('horizon'));
     }
 
     protected function configureAuthorization(): void
