@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Enums\Queue;
+use App\Support\Horizon\HorizonConfig;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 describe('scheduling', function () {
@@ -39,29 +39,46 @@ describe('scheduling', function () {
     })->with($expectedCommands);
 });
 
-describe('horizon supervisors', function () {
-    it('leaves the horizon defaults empty', function () {
-        expect(config('horizon.defaults'))->toBe([]);
+describe('horizon supervisor configuration', function () {
+    beforeEach(function () {
+        config()->set('horizon.custom', [
+            // `queue` here must always be overwritten by the ordered list.
+            'defaults' => ['timeout' => 90, 'tries' => 5, 'queue' => ['ignored']],
+            'queues' => [
+                Queue::Default->value => ['tries' => 1],
+            ],
+        ]);
     });
 
-    it('registers a single wildcard environment', function () {
-        expect(config('horizon.environments'))
-            ->toHaveCount(1)
-            ->toHaveKey('*');
+    it('leaves the defaults empty', function () {
+        expect((new HorizonConfig)->toArray()['defaults'])->toBe([]);
     });
 
-    it('creates a supervisor for every queue', function (Queue $queue) {
-        expect(config('horizon.environments.*'))
-            ->toHaveKey("supervisor-{$queue->value}");
-    })->with(Queue::cases());
+    it('turns the custom config into a single wildcard environment of supervisors', function () {
+        $config = new HorizonConfig;
 
-    it('creates no supervisors beyond the queue enum cases', function () {
-        $expected = collect(Queue::cases())
-            ->map(fn (Queue $queue): string => "supervisor-{$queue->value}")
-            ->all();
+        // One supervisor per queue: overrides win over defaults, and the queue
+        // lists itself first then the others alphabetically.
+        $expected = [];
 
-        expect(array_keys(config('horizon.environments.*')))
-            ->toEqualCanonicalizing($expected);
+        foreach (Queue::cases() as $queue) {
+            // The default settings in beforeEach. Note `queue` is the ordered
+            // list, never the `['ignored']` we put in the custom defaults.
+            $worker = [
+                'timeout' => 90,
+                'tries' => 5,
+                'queue' => $config->orderedQueues()[$queue->value],
+            ];
+
+            // Default queue overrides `tries`.
+            if ($queue === Queue::Default) {
+                $worker['tries'] = 1;
+            }
+
+            $expected["supervisor-{$queue->value}"] = $worker;
+        }
+
+        expect($config->toArray()['environments'])->toEqual(['*' => $expected]);
     });
 
     it('orders each supervisor queue with its own queue first, then the rest alphabetically', function (Queue $queue) {
@@ -72,46 +89,38 @@ describe('horizon supervisors', function () {
             ->values()
             ->all();
 
-        expect(config("horizon.environments.*.supervisor-{$queue->value}.queue"))
+        $environments = (new HorizonConfig)->toArray()['environments'];
+
+        expect($environments['*']["supervisor-{$queue->value}"]['queue'])
             ->toBe([$queue->value, ...$rest]);
     })->with(Queue::cases());
+});
 
-    it('uses the custom defaults unchanged for a queue without overrides', function () {
-        /** @var Queue $queueWithoutOverrides */
-        $queueWithoutOverrides = Arr::first(
-            Queue::cases(),
-            fn (Queue $queue): bool => ! array_key_exists($queue->value, config('horizon.custom.queues')),
-        );
+describe('horizon service provider', function () {
+    it('merges the compiled supervisor config onto the native horizon config', function () {
+        $horizonConfig = (new HorizonConfig)->toArray();
 
-        $supervisorOfQueueWithoutOverrides = config("horizon.environments.*.supervisor-{$queueWithoutOverrides->value}");
-        $defaultSupervisor = config('horizon.custom.defaults');
+        // HorizonServiceProvider sets config('horizon') to our values at booth
+        expect(config('horizon.defaults'))->toBe($horizonConfig['defaults']);
+        expect(config('horizon.environments'))->toEqual($horizonConfig['environments']);
 
-        expect($supervisorOfQueueWithoutOverrides)
-            // Queue is always custom so we dont need to check that
-            ->toMatchArray(Arr::except($defaultSupervisor, 'queue'));
-    });
-
-    it('overrides default options per queue', function () {
-        $defaults = config('horizon.custom.defaults');
-        $overrides = config('horizon.custom.queues', []);
-
-        /** @var Queue $customizedQueue */
-        $customizedQueue = Arr::first(
-            Queue::cases(),
-            fn (Queue $queue): bool => array_key_exists($queue->value, config('horizon.custom.queues')),
-        );
-
-        $queueOverrides = $overrides[$customizedQueue->value];
-        $supervisor = config("horizon.environments.*.supervisor-{$customizedQueue->value}");
-
-        // Overridden keys win.
-        foreach ($queueOverrides as $key => $value) {
-            expect($supervisor[$key])->toBe($value);
-        }
-
-        // Every other default option still flows through untouched.
-        foreach (array_diff_key($defaults, $queueOverrides, ['queue' => null]) as $key => $value) {
-            expect($supervisor[$key])->toBe($value);
-        }
+        // ...while leaving every native Horizon key in place (merged, not replaced).
+        expect(config('horizon'))->toHaveKeys([
+            'name',
+            'domain',
+            'path',
+            'use',
+            'prefix',
+            'middleware',
+            'waits',
+            'trim',
+            'silenced',
+            'silenced_tags',
+            'metrics',
+            'fast_termination',
+            'memory_limit',
+            'watch',
+            'custom',
+        ]);
     });
 });

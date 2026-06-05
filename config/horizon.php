@@ -214,8 +214,6 @@ return [
 
     /**
      * We build the supervisors using this simplified config setup.
-     *
-     * TODO: One day make it a rector rule that writes it to the file instead of doing this dynamically.
      */
     'custom' => [
         /**
