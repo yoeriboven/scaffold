@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\Queue;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 describe('scheduling', function () {
@@ -38,32 +39,72 @@ describe('scheduling', function () {
     })->with($expectedCommands);
 });
 
-describe('horizon', function () {
-    it('assigns every queue to a supervisor in the defaults', function (Queue $queue) {
-        $configuredQueues = collect(config('horizon.defaults'))
-            ->pluck('queue')
-            ->flatten()
-            ->all();
+describe('horizon supervisors', function () {
+    it('leaves the horizon defaults empty', function () {
+        expect(config('horizon.defaults'))->toBe([]);
+    });
 
-        $this->assertContains(
-            $queue->value,
-            $configuredQueues,
-            "Queue '{$queue->value}' is not assigned to any supervisor in config/horizon.php 'defaults'."
-        );
+    it('registers a single wildcard environment', function () {
+        expect(config('horizon.environments'))
+            ->toHaveCount(1)
+            ->toHaveKey('*');
+    });
+
+    it('creates a supervisor for every queue', function (Queue $queue) {
+        expect(config('horizon.environments.*'))
+            ->toHaveKey("supervisor-{$queue->value}");
     })->with(Queue::cases());
 
-    it('only assigns queues that are valid Queue enum cases', function () {
-        $configuredQueues = collect(config('horizon.defaults'))
-            ->pluck('queue')
-            ->flatten()
-            ->unique();
+    it('creates no supervisors beyond the queue enum cases', function () {
+        $expected = collect(Queue::cases())
+            ->map(fn (Queue $queue): string => "supervisor-{$queue->value}")
+            ->all();
 
-        foreach ($configuredQueues as $queue) {
-            $this->assertContains(
-                $queue,
-                Queue::values(),
-                "Queue '{$queue}' in config/horizon.php 'defaults' is not a valid ".Queue::class.' case.'
-            );
+        expect(array_keys(config('horizon.environments.*')))
+            ->toEqualCanonicalizing($expected);
+    });
+
+    it('assigns each supervisor only its own queue', function (Queue $queue) {
+        expect(config("horizon.environments.*.supervisor-{$queue->value}.queue"))
+            ->toBe([$queue->value]);
+    })->with(Queue::cases());
+
+    it('uses the custom defaults unchanged for a queue without overrides', function () {
+        /** @var Queue $queueWithoutOverrides */
+        $queueWithoutOverrides = Arr::first(
+            Queue::cases(),
+            fn (Queue $queue): bool => ! array_key_exists($queue->value, config('horizon.custom.queues')),
+        );
+
+        $supervisorOfQueueWithoutOverrides = config("horizon.environments.*.supervisor-{$queueWithoutOverrides->value}");
+        $defaultSupervisor = config('horizon.custom.defaults');
+
+        expect($supervisorOfQueueWithoutOverrides)
+            // Queue is always custom so we dont need to check that
+            ->toMatchArray(Arr::except($defaultSupervisor, 'queue'));
+    });
+
+    it('overrides default options per queue', function () {
+        $defaults = config('horizon.custom.defaults');
+        $overrides = config('horizon.custom.queues', []);
+
+        /** @var Queue $customizedQueue */
+        $customizedQueue = Arr::first(
+            Queue::cases(),
+            fn (Queue $queue): bool => array_key_exists($queue->value, config('horizon.custom.queues')),
+        );
+
+        $queueOverrides = $overrides[$customizedQueue->value];
+        $supervisor = config("horizon.environments.*.supervisor-{$customizedQueue->value}");
+
+        // Overridden keys win.
+        foreach ($queueOverrides as $key => $value) {
+            expect($supervisor[$key])->toBe($value);
+        }
+
+        // Every other default option still flows through untouched.
+        foreach (array_diff_key($defaults, $queueOverrides, ['queue' => null]) as $key => $value) {
+            expect($supervisor[$key])->toBe($value);
         }
     });
 });

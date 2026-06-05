@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\Queue;
 use Illuminate\Support\Str;
 
 return [
@@ -189,62 +190,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Queue Worker Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may define the queue worker settings used by your application
-    | in all environments. These supervisors and settings handle all your
-    | queued jobs and will be provisioned by Horizon during deployment.
-    |
-    */
-
-    'defaults' => [
-        'supervisor-default' => [
-            'connection' => 'redis',
-            'queue' => ['default', 'monitoring'],
-            'balance' => 'auto',
-            'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
-            'maxTime' => 0,
-            'maxJobs' => 0,
-            'memory' => 128,
-            'tries' => 1,
-            'timeout' => 95,
-            'nice' => 0,
-        ],
-        'supervisor-monitoring' => [
-            'connection' => 'redis',
-            'queue' => ['monitoring', 'default'],
-            'balance' => 'auto',
-            'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
-            'maxTime' => 0,
-            'maxJobs' => 0,
-            'memory' => 128,
-            'tries' => 1,
-            'timeout' => 95,
-            'nice' => 0,
-        ],
-    ],
-
-    'environments' => [
-        'production' => [
-            'supervisor-default' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
-            ],
-        ],
-
-        'local' => [
-            'supervisor-default' => [
-                'maxProcesses' => 3,
-            ],
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | File Watcher Configuration
     |--------------------------------------------------------------------------
     |
@@ -265,5 +210,66 @@ return [
         'composer.lock',
         'composer.json',
         '.env',
+    ],
+
+    /**
+     * We build the supervisors using this simplified config setup.
+     *
+     * TODO: One day make it a rector rule that writes it to the file instead of doing this dynamically.
+     */
+    'custom' => [
+        /**
+         * Default worker flags for every supervised queue. Any queue may
+         * override any of these under `queues` below; an unset key falls back
+         * to the default here.
+         */
+        'defaults' => [
+            /**
+             * `timeout` is the maximum seconds a single job may run before the
+             * worker kills it. The value that actually drives the ordering below is
+             * the largest timeout across all queues — whether that is this default
+             * or a per-queue override under `queues`. Every related timeout must
+             * stay in this order, smallest to largest, measured against that
+             * largest value. When you raise a timeout for a slow job (here or in an
+             * override), walk down the list and bump anything that would fall out
+             * of order:
+             *
+             *   1. http client timeout  — inside the job. Smaller than that job's
+             *      timeout, so the external call fails before the job is killed.
+             *   2. timeout  — default or custom, is passed to the worker
+             *   3. shutdown grace (= largest timeout across all queues + 10)  —
+             *      derived automatically. After asking workers to stop we wait this
+             *      long, then SIGKILL the rest.
+             *   4. retry_after  — in the connections above, default 90. When the
+             *      queue assumes the worker died and hands the job to another worker.
+             *      Keep at least 10s above the largest timeout or a job runs twice.
+             *   5. max-time  — worker recycle interval (3600). Larger than the
+             *      slowest job so it never recycles mid-job.
+             *   6. stopwaitsecs / TimeoutStopSec  — in the process monitor, outside
+             *      this app (3600). Larger than the shutdown grace so the monitor
+             *      lets the supervisor finish before hard-killing it.
+             */
+            'timeout' => 60,
+            'connection' => 'redis',
+            'queue' => [],
+
+            // We don't want autoscaling. One worker by default
+            'balance' => false,
+            'minProcesses' => 1,
+            'maxProcesses' => 1,
+
+            'maxTime' => 3600,
+            'maxJobs' => 100,
+            'memory' => 128,
+            'tries' => 3,
+            'nice' => 0,
+            'backoff' => 10,
+        ],
+
+        'queues' => [
+            Queue::Default->value => [
+                'timeout' => 20,
+            ],
+        ],
     ],
 ];
