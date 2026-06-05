@@ -265,7 +265,7 @@ return [
         ],
 
         'queues' => [
-            Queue::Default->value => [
+            Queue::Monitoring->value => [
                 'timeout' => 20,
             ],
         ],

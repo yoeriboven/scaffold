@@ -123,4 +123,17 @@ describe('horizon service provider', function () {
             'custom',
         ]);
     });
+
+    it('gives every supervisor exactly the custom default option keys', function () {
+        // A queue worker is only allowed the keys given in defaults
+        $allowedOptions = array_keys(config('horizon.custom.defaults'));
+
+        foreach (config('horizon.environments.*') as $name => $supervisor) {
+            $this->assertEqualsCanonicalizing(
+                array_keys($supervisor),
+                $allowedOptions,
+                "Supervisor [{$name}] can only set options to override defaults."
+            );
+        }
+    });
 });
