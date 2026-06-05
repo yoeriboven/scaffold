@@ -185,4 +185,16 @@ describe('horizon worker invariants', function () {
             );
         }
     });
+
+    it('never lets a queue timeout exceed the default timeout', function () {
+        $defaultTimeout = config('horizon.custom.defaults.timeout');
+
+        foreach (config('horizon.environments.*') as $name => $supervisor) {
+            $this->assertLessThanOrEqual(
+                $defaultTimeout,
+                $supervisor['timeout'],
+                "Supervisor [{$name}] timeout ({$supervisor['timeout']}) must not exceed the default timeout ({$defaultTimeout})."
+            );
+        }
+    });
 });
