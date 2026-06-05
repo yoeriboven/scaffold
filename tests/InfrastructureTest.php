@@ -64,9 +64,16 @@ describe('horizon supervisors', function () {
             ->toEqualCanonicalizing($expected);
     });
 
-    it('assigns each supervisor only its own queue', function (Queue $queue) {
+    it('orders each supervisor queue with its own queue first, then the rest alphabetically', function (Queue $queue) {
+        $rest = collect(Queue::cases())
+            ->map(fn (Queue $other): string => $other->value)
+            ->reject(fn (string $value): bool => $value === $queue->value)
+            ->sort()
+            ->values()
+            ->all();
+
         expect(config("horizon.environments.*.supervisor-{$queue->value}.queue"))
-            ->toBe([$queue->value]);
+            ->toBe([$queue->value, ...$rest]);
     })->with(Queue::cases());
 
     it('uses the custom defaults unchanged for a queue without overrides', function () {
