@@ -9,7 +9,6 @@ Always check if the key already exists to avoid duplicates.
 - To import other components always use the absolute path starting with `@` instead of a relative path.
 
 ## PHP
-- New controllers need to extend App\Http\Controller and use the `handle` method and `authorize` if necessary. Never use `__invoke()`.
 
 ## Laravel
 - Don't use `$fillable` on the models. We are unguarded by default.
@@ -21,6 +20,9 @@ Always check if the key already exists to avoid duplicates.
 
 ### Controllers
 - If not explicitly said otherwise, use invokable controllers.
+
+### Validation
+- Validate should use array for the rules. Not a pipe separated list.
 
 ### Localization
 - Use `__()` in `.blade.php` files.

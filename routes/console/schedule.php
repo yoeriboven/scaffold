@@ -7,8 +7,8 @@ use Spatie\Health\Commands\DispatchQueueCheckJobsCommand;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 /** Daily: should be spread out */
-Schedule::command('backup:clean')->dailyAt('07:00');
-Schedule::command('backup:run')->dailyAt('07:05');
+Schedule::command('backup:run')->dailyAt('07:00');
+Schedule::command('backup:clean')->dailyAt('07:05')->runInBackground();
 Schedule::command('model:prune', [
     '--model' => [MonitoredScheduledTaskLogItem::class],
 ])->dailyAt('07:10');
