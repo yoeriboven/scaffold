@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Domains\Teams\Models\Invitation;
-use App\Http\Controllers\Onboarding\SelectTimezoneController;
-use App\Http\Controllers\Onboarding\StoreTimezoneController;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -15,7 +13,11 @@ class RedirectToPendingInvitation
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($this->shouldSkipRedirect($request)) {
+        // Skip the invitation screen itself and any onboarding "gate" route.
+        // Those routes redirect on their own (e.g. EnsureUserHasTimezone), so
+        // redirecting into them here would create an infinite redirect loop and
+        // never reach the controller that clears the invitation from the session.
+        if ($request->routeIs('invitation.accept.*', 'onboarding.*')) {
             return $next($request);
         }
 
@@ -24,21 +26,6 @@ class RedirectToPendingInvitation
         }
 
         return $next($request);
-    }
-
-    /**
-     * Skip the redirect while the user is already on the invitation screen or
-     * still completing the timezone onboarding. Otherwise this middleware and
-     * EnsureUserHasTimezone bounce the user back and forth between the two
-     * routes and never reach the controller that clears the session.
-     */
-    private function shouldSkipRedirect(Request $request): bool
-    {
-        return $request->routeIs('invitation.accept.*')
-            || $request->usesController([
-                SelectTimezoneController::class,
-                StoreTimezoneController::class,
-            ]);
     }
 
     public function activeInvitation(): ?Invitation

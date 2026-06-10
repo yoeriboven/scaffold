@@ -15,8 +15,13 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('', 'Dashboard')->name('dashboard');
 
 /* Onboarding */
-Route::get('onboarding/timezone', SelectTimezoneController::class);
-Route::post('onboarding/timezone', StoreTimezoneController::class);
+// Onboarding steps are "gate" routes: each one may redirect the user until it
+// is satisfied. RedirectToPendingInvitation skips every `onboarding.*` route so
+// new steps are exempt automatically without touching the middleware.
+Route::prefix('onboarding')->name('onboarding.')->group(function () {
+    Route::get('timezone', SelectTimezoneController::class)->name('timezone.show');
+    Route::post('timezone', StoreTimezoneController::class)->name('timezone.store');
+});
 
 /* Team */
 Route::get('team', ShowTeamController::class);
