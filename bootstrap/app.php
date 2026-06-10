@@ -85,7 +85,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 ]);
             }
 
-            if (app()->isProduction() && in_array($response->getStatusCode(), [500, 503, 404, 403], true)) {
+            if ($response->getStatusCode() === 404) {
+                return Inertia::location(route('error', $response->getStatusCode()));
+            }
+
+            if (
+                in_array($response->getStatusCode(), [404, 403], true)
+                || (app()->isProduction() && in_array($response->getStatusCode(), [500, 503], true))
+            ) {
                 return Inertia::location(route('error', $response->getStatusCode()));
             }
 
