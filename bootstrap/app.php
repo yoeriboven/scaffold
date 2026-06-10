@@ -33,7 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withCommands([
         base_path('routes/console/console.php'),
-        base_path('routes/console/console-local.php'),
+        base_path('routes/console/console-dev.php'),
         base_path('routes/console/schedule.php'),
     ])
     ->withMiddleware(function (Middleware $middleware): void {
