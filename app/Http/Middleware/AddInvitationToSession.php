@@ -17,12 +17,14 @@ class AddInvitationToSession
 {
     public function handle(Request $request, Closure $next)
     {
+        info('AddInvitationToSession');
         // TODO: Change to controller check sometime. We can't do that currently because our usesController method only checks for invokable controllers.
         if (! $request->routeIs('invitation.accept.show')) {
+            info('not invitation.accept.show so continue');
             return $next($request);
         }
-
-        Session::put('invitation', $request->route('invitation')->public_id);
+info('lets put it in the session: '.$request->route('invitation'));
+        Session::put('invitation', $request->route('invitation'));
 
         return $next($request);
     }
