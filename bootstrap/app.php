@@ -7,6 +7,8 @@ use App\Http\Middleware\ConfigureNightwatchSampling;
 use App\Http\Middleware\EnsureUserHasTimezone;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RedirectToPendingInvitation;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -60,10 +62,10 @@ return Application::configure(basePath: dirname(__DIR__))
          * AddInvitationToSession should always run before auth or on unauthenticated we would
          * be redirected away and never get to add the invitation to the session.
          */
-        $middleware->priority([
-            AddInvitationToSession::class,
-            'auth',
-        ]);
+        $middleware->prependToPriorityList(
+            before: AuthenticatesRequests::class,
+            prepend: AddInvitationToSession::class,
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->dontTruncateRequestExceptions();
