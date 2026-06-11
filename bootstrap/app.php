@@ -70,6 +70,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->dontTruncateRequestExceptions();
 
         $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
+            if (
+                in_array($response->getStatusCode(), [404, 403], true)
+                || (app()->isProduction() && $response->getStatusCode() >= 500)
+            ) {
+                return Inertia::render('misc/Error', ['code' => $response->getStatusCode()])
+                    ->toResponse($request)
+                    ->setStatusCode($response->getStatusCode());
+            }
+
             if (! $request->inertia()) {
                 return $response;
             }
@@ -84,30 +93,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 ]);
             }
 
-            if ($response->getStatusCode() === 404) {
-                return Inertia::location(route('error', $response->getStatusCode()));
-            }
-
-            if (
-                in_array($response->getStatusCode(), [404, 403], true)
-                || (app()->isProduction() && in_array($response->getStatusCode(), [500, 503], true))
-            ) {
-                return Inertia::location(route('error', $response->getStatusCode()));
-            }
-
             $message = $response->getStatusCode() >= 500 && app()->isProduction()
                 ? 'Something went wrong with the request. We have been notified.'
                 : $exception->getMessage();
-
-            //          dev - prod
-            // < 500    message - message
-            // 500 - message - smt..
-
-            //            $message = match (true) {
-            //                $response->getStatusCode() === 419 => 'The page expired, please try again.',
-            //                $response->getStatusCode() >= 400 && $response->getStatusCode() < 500 => $exception->getMessage(),
-            //                default => 'Something went wrong with the request. We have been notified.',
-            //            };
 
             toast()->error($message);
 
