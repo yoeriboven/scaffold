@@ -95,7 +95,7 @@ describe('inertia requests', function () {
     });
 
     test('a failing request outside production redirects back with the exception message as a toast', function () {
-        Route::middleware('web')->post('/failing-route', fn () => abort(400));
+        Route::middleware('web')->post('/failing-route', fn () => abort(400, 'Something exploded'));
 
         $this
             ->asInertia()
@@ -118,7 +118,7 @@ describe('inertia requests', function () {
             ->assertInvalid('email');
     });
 
-    test('throttled requests redirect back with a throttle validation error', function () {
+    test('throttled requests redirect back with a toast', function () {
         Route::middleware(['web', 'throttle:1,1'])->post('/throttled-route', fn () => 'ok');
 
         $this->asInertia()->post('/throttled-route')->assertOk();
@@ -128,6 +128,6 @@ describe('inertia requests', function () {
             ->from('/previous-page')
             ->post('/throttled-route')
             ->assertRedirect('/previous-page')
-            ->assertInvalid(['throttle' => 'Too many requests. Please try again later.']);
+            ->assertToast('Too many requests. Please try again later.', FlashLevel::ERROR);
     });
 });

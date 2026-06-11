@@ -88,9 +88,9 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             if ($exception instanceof ThrottleRequestsException) {
-                throw ValidationException::withMessages([
-                    'throttle' => 'Too many requests. Please try again later.',
-                ]);
+                toast()->error(trans('Too many requests. Please try again later.'));
+
+                return back();
             }
 
             $message = $response->getStatusCode() >= 500 && app()->isProduction()
