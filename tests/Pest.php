@@ -28,7 +28,6 @@ pest()->extend(TestCase::class)
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->group('browser')
     ->in('Browser');
 
 pest()->extend(TestCase::class)
