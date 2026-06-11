@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\MissingAttributeException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureAssetPrefetching();
         $this->configureDates();
         $this->configureCommands();
+        $this->configureFactories();
         $this->configureURL();
         $this->configureEmailRecipientOnLocal();
         $this->configureRateLimiting();
@@ -70,6 +73,13 @@ class AppServiceProvider extends ServiceProvider
     private function configureCommands(): void
     {
         DB::prohibitDestructiveCommands(app()->isProduction());
+    }
+
+    private function configureFactories(): void
+    {
+        Factory::guessFactoryNamesUsing(function (string $modelName) {
+            return sprintf('Database\\Factories\\%sFactory', Str::afterLast($modelName, '\\'));
+        });
     }
 
     private function configureURL(): void

@@ -7,7 +7,6 @@ use App\Http\Middleware\ConfigureNightwatchSampling;
 use App\Http\Middleware\EnsureUserHasTimezone;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RedirectToPendingInvitation;
-use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;

@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Support\Flash\FlashLevel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 /*
@@ -60,3 +62,10 @@ function something()
 {
     // ..
 }
+
+TestResponse::macro('assertToast', function (string $message, FlashLevel $level = FlashLevel::SUCCESS) {
+    return $this->assertInertiaFlash('toast', [
+        'message' => $message,
+        'level' => $level->value,
+    ]);
+});
