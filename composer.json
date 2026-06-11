@@ -98,7 +98,7 @@
             "npm run types:check",
             "@test"
         ],
-        "test": "@php artisan test --parallel --order-by random --exclude-group=architecture,browser",
+        "test": "@php artisan test --parallel --order-by random --exclude-group=architecture --exclude-group=browser",
         "test:architecture": "@php artisan test --parallel --order-by random --group architecture",
         "test:browser": "@php artisan test --parallel --order-by random --group browser",
         "test:all": [

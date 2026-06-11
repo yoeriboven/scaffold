@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Domains\Teams\Enum\TeamRole;
+use App\Domains\Teams\Models\Team;
 use App\Enums\Locale;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -49,6 +51,16 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Indicate that the user is a member of the given team.
+     */
+    public function memberOf(Team $team, TeamRole $role = TeamRole::MEMBER): static
+    {
+        return $this->afterCreating(function (User $user) use ($team, $role) {
+            $user->joinTeam($team, $role);
+        });
     }
 
     /**

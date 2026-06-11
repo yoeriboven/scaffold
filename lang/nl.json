@@ -1,3 +1,14 @@
 {
-    "": ""
+    "Accept Invitation": "Uitnodiging accepteren",
+    "Click the button below to accept the invitation and get started.": "Klik op de knop hieronder om de uitnodiging te accepteren en aan de slag te gaan.",
+    "If you did not expect to receive this invitation, you can safely ignore this email.": "Als je deze uitnodiging niet verwachtte, kun je deze e-mail veilig negeren.",
+    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below into your web browser:": "Als het niet lukt om op de knop \":actionText\" te klikken, kopieer en plak dan de onderstaande URL in je webbrowser:",
+    "Invitation sent to": "Uitnodiging verzonden naar",
+    "Resent invitation to": "Uitnodiging opnieuw verzonden naar",
+    "Thanks,": "Bedankt,",
+    "This person is already a member of your team.": "Deze persoon is al lid van je team.",
+    "You have been invited!": "Je bent uitgenodigd!",
+    "You have been invited to": "Je bent uitgenodigd voor",
+    "You have been invited to join :team on :app.": "Je bent uitgenodigd om je aan te sluiten bij :team op :app.",
+    "You can only send an invite to the same team member once per day.": "Je kunt hetzelfde teamlid maar één keer per dag een uitnodiging sturen."
 }

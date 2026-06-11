@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Domains\Teams\Enum\TeamRole;
 use App\Domains\Teams\Mail\InviteUserMail;
 use App\Domains\Teams\Models\Invitation;
 use App\Http\Controllers\Teams\InviteUserController;
@@ -10,7 +9,6 @@ use App\Http\Controllers\Teams\ShowTeamController;
 use App\Models\User;
 use App\Support\Flash\FlashLevel;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Once;
 
 beforeEach(fn () => Mail::fake());
@@ -46,6 +44,23 @@ test('an invitation requires a valid email address', function (string $email) {
     'empty' => '',
     'not an email' => 'not-an-email',
 ]);
+
+test('an email that already belongs to a team member cannot be invited', function () {
+    $user = User::factory()->create();
+
+    User::factory()
+        ->memberOf($user->currentTeam())
+        ->create(['email' => 'member@example.com']);
+
+    $this
+        ->actingAs($user)
+        ->post(action(InviteUserController::class), ['email' => 'member@example.com'])
+        ->assertInvalid('email');
+
+    $this->assertDatabaseCount('invitations', 0);
+
+    Mail::assertNothingQueued();
+});
 
 test('inviting an already invited email resends the existing invitation instead of creating a duplicate', function () {
     $user = User::factory()->create();
@@ -135,8 +150,7 @@ describe('rate limiting', function () {
 describe('authorization', function () {
     test('a team member without the manage team permission cannot invite users', function () {
         $owner = User::factory()->create();
-        $member = User::factory()->create();
-        $member->joinTeam($owner->currentTeam(), TeamRole::MEMBER);
+        $member = User::factory()->memberOf($owner->currentTeam())->create();
 
         $response = $this
             ->actingAs($member)

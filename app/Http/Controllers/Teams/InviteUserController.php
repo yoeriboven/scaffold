@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Teams;
 
 use App\Domains\Teams\Enum\TeamPermission;
 use App\Domains\Teams\Mail\InviteUserMail;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
@@ -26,7 +27,15 @@ class InviteUserController
         );
 
         $request->validate([
-            'email' => 'required|email:strict',
+            'email' => [
+                'required',
+                'email:strict',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (currentTeam()->users()->where('email', $value)->exists()) {
+                        $fail(trans('This person is already a member of your team.'));
+                    }
+                },
+            ],
         ]);
 
         $invitation = currentTeam()->invite($request->email);

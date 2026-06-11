@@ -27,6 +27,11 @@ pest()->extend(TestCase::class)
     ->in('Integration');
 
 pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
+    ->group('browser')
+    ->in('Browser');
+
+pest()->extend(TestCase::class)
     ->in('ArchitectureTest.php');
 
 pest()->extend(TestCase::class)
