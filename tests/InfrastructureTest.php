@@ -10,8 +10,8 @@ use Illuminate\Support\Str;
 
 describe('scheduling', function () {
     $expectedCommands = [
-        ['name' => 'backup:clean', 'expression' => '0 7 * * *'],
-        ['name' => 'backup:run', 'expression' => '5 7 * * *'],
+        ['name' => 'backup:run', 'expression' => '0 7 * * *'],
+        ['name' => 'backup:clean', 'expression' => '5 7 * * *'],
         ['name' => 'model:prune --model=\'Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem\'', 'expression' => '10 7 * * *'],
         ['name' => 'health:queue-check-heartbeat', 'expression' => '* * * * *'],
         ['name' => 'horizon:snapshot', 'expression' => '*/5 * * * *'],
