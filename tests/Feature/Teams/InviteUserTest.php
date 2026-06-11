@@ -133,8 +133,6 @@ describe('rate limiting', function () {
             ->post(action(InviteUserController::class), ['email' => 'invitee@example.com'])
             ->assertRedirectToAction(ShowTeamController::class);
 
-        Once::flush();
-
         $this
             ->actingAs($anotherUserOnADifferentTeam)
             ->post(action(InviteUserController::class), ['email' => 'invitee@example.com'])
